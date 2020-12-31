@@ -1,2 +1,2 @@
-idf_component_register(SRCS "netdisp.c"
+idf_component_register(SRCS "netdisp.cpp"
                     INCLUDE_DIRS ".")
