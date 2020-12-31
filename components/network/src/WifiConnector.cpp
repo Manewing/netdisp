@@ -173,7 +173,7 @@ void WifiConnector::handleIpEvent(int32_t EventId, void *EventData) {
 
   ip_event_got_ip_t *EventGotIp =
       reinterpret_cast<ip_event_got_ip_t *>(EventData);
-  ESP_LOGI(LOGGER_TAG, "got ip:" IPSTR, IP2STR(&EventGotIp->ip_info.ip));
+  ESP_LOGI(LOGGER_TAG, "got IP: " IPSTR, IP2STR(&EventGotIp->ip_info.ip));
 
   ConnectNumRetry = 0;
   xEventGroupSetBits(EventHandle, WIFI_CONNECTED_BIT);

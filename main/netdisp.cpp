@@ -1,6 +1,10 @@
 #include <network/WifiConnector.hpp>
+#include <network/UdpReceiver.hpp>
 
-#include "nvs_flash.h"
+#include <esp_log.h>
+#include <nvs_flash.h>
+
+#include <cstring>
 
 namespace netdisp {
 
@@ -9,6 +13,23 @@ void main() {
           CONFIG_ESP_WIFI_SSID, CONFIG_ESP_WIFI_PASSWORD,
           CONFIG_ESP_MAXIMUM_RETRY)) {
     return;
+  }
+
+  network::UdpReceiver Receiver(5432);
+  if (!Receiver.isReady()) {
+    ESP_LOGE("NetDisp", "Could not setup UDP receiver");
+    return;
+  }
+
+  while (1) {
+    char Buffer[256];
+    std::memset(Buffer, 0, sizeof(Buffer));
+    int Count = Receiver.recv(Buffer, sizeof(Buffer));
+    if (Count < 0) {
+      ESP_LOGE("NetDisp", "Failed to receive data");
+    }
+
+    ESP_LOGI("NetDisp", "Got message: %s", Buffer);
   }
 }
 
