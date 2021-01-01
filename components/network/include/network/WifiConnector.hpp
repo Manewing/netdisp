@@ -16,6 +16,10 @@ public:
   bool connect(std::string const &SSID, std::string const &Password,
                unsigned MaxRetry = 10);
 
+  uint32_t getIpAddr() const;
+
+  std::string getIpAddrStr() const;
+
 protected:
   static void initWifi();
   static void startWifi(std::string const &SSID, std::string const &Password);
@@ -35,6 +39,7 @@ protected:
   void handleIpEvent(int32_t EventId, void *EventData);
 
 private:
+  uint32_t Ipv4Addr = 0;
   void *EventHandle = nullptr;
   void *InstanceGotAnyId = nullptr;
   void *InstanceGotIp = nullptr;

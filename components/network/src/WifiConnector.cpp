@@ -45,6 +45,18 @@ bool WifiConnector::connect(std::string const &SSID,
   return Connected;
 }
 
+uint32_t WifiConnector::getIpAddr() const {
+  return Ipv4Addr;
+}
+
+std::string WifiConnector::getIpAddrStr() const {
+  char Buffer[16];
+  // FIXME use proper conversion function
+  const uint8_t *Addr = reinterpret_cast<const uint8_t*>(&Ipv4Addr);
+  sprintf(Buffer, "%d.%d.%d.%d", Addr[0], Addr[1], Addr[2], Addr[3]);
+  return std::string(Buffer);
+}
+
 void WifiConnector::initWifi() {
   ESP_ERROR_CHECK(esp_netif_init());
 
@@ -174,6 +186,7 @@ void WifiConnector::handleIpEvent(int32_t EventId, void *EventData) {
   ip_event_got_ip_t *EventGotIp =
       reinterpret_cast<ip_event_got_ip_t *>(EventData);
   ESP_LOGI(LOGGER_TAG, "got IP: " IPSTR, IP2STR(&EventGotIp->ip_info.ip));
+  Ipv4Addr = EventGotIp->ip_info.ip.addr;
 
   ConnectNumRetry = 0;
   xEventGroupSetBits(EventHandle, WIFI_CONNECTED_BIT);
