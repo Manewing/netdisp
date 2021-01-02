@@ -17,9 +17,9 @@ LedController::LedController(std::vector<int> LP) : LedPins(std::move(LP)) {
       continue;
     }
 
-    // TODO check error codes
-    gpio_reset_pin(static_cast<gpio_num_t>(LedPin));
-    gpio_set_direction(static_cast<gpio_num_t>(LedPin), GPIO_MODE_OUTPUT);
+    ESP_ERROR_CHECK(gpio_reset_pin(static_cast<gpio_num_t>(LedPin)));
+    ESP_ERROR_CHECK(
+        gpio_set_direction(static_cast<gpio_num_t>(LedPin), GPIO_MODE_OUTPUT));
   }
 }
 
