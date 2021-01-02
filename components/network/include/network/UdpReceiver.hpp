@@ -8,6 +8,7 @@ namespace network {
 class UdpReceiver : public Receiver {
 public:
   UdpReceiver(int Port, bool IPv6 = false);
+  virtual ~UdpReceiver();
 
   bool isReady() const;
 

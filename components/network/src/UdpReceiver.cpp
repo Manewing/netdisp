@@ -42,6 +42,12 @@ UdpReceiver::UdpReceiver(int Port, bool IPv6) {
   }
 }
 
+UdpReceiver::~UdpReceiver() {
+  if (isReady()) {
+    close(Socket);
+  }
+}
+
 bool UdpReceiver::isReady() const {
   return Socket >= 0;
 }
