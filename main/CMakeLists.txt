@@ -1,12 +1,13 @@
 idf_component_register(
   SRCS
-    "src/netdisp.cpp"
-    "src/Parser.cpp"
     "src/Command.cpp"
-    "src/Led.cpp"
-    "src/View.cpp"
     "src/Display.cpp"
     "src/LcdgfxDisplay.cpp"
+    "src/Led.cpp"
+    "src/Parser.cpp"
+    "src/RotEnc.cpp"
+    "src/View.cpp"
+    "src/netdisp.cpp"
   INCLUDE_DIRS
     "include"
 )
