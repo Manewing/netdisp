@@ -3,7 +3,11 @@
 #include <netdisp/Parser.hpp>
 #include <netdisp/View.hpp>
 #include <network/UdpReceiver.hpp>
+#include <network/AsyncReceiver.hpp>
 #include <network/WifiConnector.hpp>
+
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
 
 // FIXME #include <lcdgfx.h> breaks STL headers
 #include <netdisp/LcdgfxDisplay.hpp>
@@ -28,9 +32,9 @@ void main() {
     return;
   }
 
-  network::UdpReceiver Receiver(NETDISP_PORT);
-  if (!Receiver.isReady()) {
-    ESP_LOGE("NetDisp", "Could not setup UDP receiver");
+  network::AsyncUdpReceiver AsyncRecv(NETDISP_PORT, 256);
+  if (!AsyncRecv.isReady()) {
+    ESP_LOGE("NetDisp", "Could not setup async receiver");
     return;
   }
 
@@ -43,17 +47,11 @@ void main() {
 
   netdisp::Context Ctx{LedCtrl, ViewCtrl};
 
-  ViewCtrl.show(DispCtrl);
-
-  while (1) {
-    uint8_t Buffer[256];
-    std::memset(Buffer, 0, sizeof(Buffer));
-    int Count = Receiver.recv(Buffer, sizeof(Buffer));
+  AsyncRecv.onRecv([&Ctx](uint8_t *Buffer, int Count) {
     if (Count < 0) {
       ESP_LOGE("NetDisp", "Failed to receive data");
-      continue;
+      return;
     }
-    // FIXME create hexdump from buffer
     ESP_LOGI("NetDisp", "Got message: %s", Buffer);
 
     netdisp::Parser Parser(Buffer, Count);
@@ -62,8 +60,11 @@ void main() {
     } else {
       ESP_LOGW("NestDisp", "Failed to parse message command");
     }
+  });
 
+  while(1) {
     ViewCtrl.show(DispCtrl);
+    vTaskDelay(50 / portTICK_PERIOD_MS);
   }
 }
 
