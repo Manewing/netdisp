@@ -15,6 +15,6 @@ private:
   std::vector<int> LedPins;
 };
 
-}
+} // namespace netdisp
 
 #endif // #ifndef NETDISP_LED_HPP
