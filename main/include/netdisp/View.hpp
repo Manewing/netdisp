@@ -10,7 +10,16 @@ namespace netdisp {
 
 class View {
 public:
-  virtual void show(DisplayController &DC) = 0;
+  void show(DisplayController &DC);
+
+  bool isDirty() const;
+  void dirty();
+
+protected:
+  virtual void showInternal(DisplayController &DC) = 0;
+
+private:
+  bool IsDirty = true;
 };
 
 class TextViewBase : public View {
@@ -25,22 +34,44 @@ class RawTextView : public TextViewBase {
 public:
   RawTextView(std::string Text);
 
-  void show(DisplayController &DC) override;
+protected:
+  void showInternal(DisplayController &DC) override;
 };
 
 class TextView : public TextViewBase {
 public:
   TextView(std::string Text);
 
-  void show(DisplayController &DC) override;
 
-private:
+protected:
+  void showInternal(DisplayController &DC) override;
   void write(DisplayController &DC, std::size_t Start, std::size_t End);
 
 private:
   unsigned Column = 0;
   unsigned Line = 0;
   bool WriteCentered = false;
+};
+
+class Notification : public View {
+public:
+  Notification(unsigned TimeoutMs);
+
+  bool isTimedout() const;
+
+private:
+  unsigned TimeoutEndMs;
+};
+
+class IdxInfoView : public Notification {
+public:
+  IdxInfoView(unsigned Idx, unsigned TimeoutMs);
+
+protected:
+  void showInternal(DisplayController &DC) override;
+
+private:
+  unsigned Idx;
 };
 
 class ViewController {
@@ -55,6 +86,9 @@ public:
   bool setView(unsigned Idx, std::shared_ptr<View> V);
   // delete view
 
+  void setNotification(std::shared_ptr<Notification> N);
+  void clearNotification();
+
   bool selectCurrentViewIdx(unsigned Idx);
   unsigned getCurrentViewIdx() const;
 
@@ -62,8 +96,11 @@ public:
   unsigned getShownViewIdx() const;
 
 private:
-  View *LastView = nullptr;
+  View &getViewToShow();
+
+private:
   std::shared_ptr<View> DefaultView;
+  std::shared_ptr<Notification> Notify;
   std::vector<std::shared_ptr<View>> Views;
 
   unsigned CurrentViewIdx = 0;
