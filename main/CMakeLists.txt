@@ -1,2 +1,12 @@
-idf_component_register(SRCS "netdisp.cpp"
-                    INCLUDE_DIRS ".")
+idf_component_register(
+  SRCS
+    "src/netdisp.cpp"
+    "src/Parser.cpp"
+    "src/Command.cpp"
+    "src/Led.cpp"
+    "src/View.cpp"
+    "src/Display.cpp"
+    "src/LcdgfxDisplay.cpp"
+  INCLUDE_DIRS
+    "include"
+)
