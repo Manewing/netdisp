@@ -65,7 +65,6 @@ std::unique_ptr<Command> Parser::parse() {
 }
 
 std::unique_ptr<Command> Parser::parseNextCommand() {
-  //printf("pos: %d, len: %d, data: %s\n", getPos(), getLength(), getData());
   uint8_t CmdId;
   if (!get<uint8_t>(CmdId)) {
     return nullptr;
@@ -110,6 +109,13 @@ std::unique_ptr<Command> Parser::parseNextCommand() {
     seek(getLength());
 
     return std::unique_ptr<Command>(new ShowTextCmd(std::move(Text), Raw));
+  }
+  case 0x04: {
+    uint8_t Led = 0, Times = 0;
+    if (!get<uint8_t>(Led) || !get<uint8_t>(Times)) {
+      return nullptr;
+    }
+    return std::unique_ptr<Command>(new BlinkLedCmd(Led, Times));
   }
   default:
     break;

@@ -59,6 +59,18 @@ private:
   bool State;
 };
 
+class BlinkLedCmd : public Command {
+public:
+  BlinkLedCmd(unsigned Led, unsigned Times);
+
+protected:
+  void executeInternal(Context &Ctx) const override;
+
+private:
+  unsigned Led;
+  unsigned Times;
+};
+
 class ShowTextCmd : public Command {
 public:
   ShowTextCmd(std::string Text, bool Raw);

@@ -1,12 +1,10 @@
 #include <network/WifiConnector.hpp>
 #include <cstring>
 
-extern "C" {
 #include <esp_log.h>
 #include <esp_wifi.h>
 #include <esp_event.h>
 #include <freertos/event_groups.h>
-}
 
 #define LOGGER_TAG "WifiConnector"
 
