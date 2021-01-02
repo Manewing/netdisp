@@ -1,6 +1,8 @@
 #ifndef NETDISP_CONTEXT_HPP
 #define NETDISP_CONTEXT_HPP
 
+#include <mutex>
+
 namespace netdisp {
 class LedController;
 class ViewController;
@@ -8,9 +10,20 @@ class ViewController;
 
 namespace netdisp {
 
-struct Context {
+class Context {
+public:
+  Context(LedController &LCtrl, ViewController &VCtrl)
+      : LedCtrl(LCtrl), ViewCtrl(VCtrl) {}
+
   LedController &LedCtrl;
   ViewController &ViewCtrl;
+
+  void lock() { Mtx.lock(); }
+
+  void unlock() { Mtx.unlock(); }
+
+private:
+  std::mutex Mtx;
 };
 
 } // namespace netdisp

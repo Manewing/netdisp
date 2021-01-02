@@ -1,9 +1,9 @@
 #include <netdisp/Config.hpp>
 #include <netdisp/Led.hpp>
 #include <netdisp/Parser.hpp>
+#include <netdisp/RotEnc.hpp>
 #include <netdisp/View.hpp>
 #include <network/UdpReceiver.hpp>
-#include <network/AsyncReceiver.hpp>
 #include <network/WifiConnector.hpp>
 
 #include <freertos/FreeRTOS.h>
@@ -22,6 +22,7 @@ namespace netdisp {
 void main() {
   LcdgfxDisplayController DispCtrl;
 
+  // TODO add pins to config
   netdisp::LedController LedCtrl({17, 16});
   LedCtrl.setLed(0, true);
   LedCtrl.setLed(1, true);
@@ -56,15 +57,34 @@ void main() {
 
     netdisp::Parser Parser(Buffer, Count);
     if (auto Cmd = Parser.parse()) {
+      Ctx.lock();
       Cmd->execute(Ctx);
+      Ctx.unlock();
     } else {
       ESP_LOGW("NestDisp", "Failed to parse message command");
     }
   });
 
-  while(1) {
+  // TODO add pins to config
+  netdisp::RotEncController RotEnc(19, 18);
+
+  int LastPosition = 0;
+  while (1) {
     ViewCtrl.show(DispCtrl);
-    vTaskDelay(50 / portTICK_PERIOD_MS);
+
+    int Position = 0;
+    if (RotEnc.waitForEvent(Position, /*TimeoutMs=*/2)) {
+      Ctx.lock();
+      if (LastPosition < Position) {
+        Ctx.ViewCtrl.showView(Ctx.ViewCtrl.getShownViewIdx() + 1);
+      } else if (LastPosition > Position) {
+        Ctx.ViewCtrl.showView(Ctx.ViewCtrl.getShownViewIdx() - 1);
+      }
+      Ctx.unlock();
+      LastPosition = Position;
+    }
+
+    vTaskDelay(10 / portTICK_PERIOD_MS);
   }
 }
 
