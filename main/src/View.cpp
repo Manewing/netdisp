@@ -84,11 +84,19 @@ ViewController::ViewController(std::shared_ptr<View> DefView, unsigned MaxViews)
 unsigned ViewController::getMaxViews() const { return Views.size(); }
 
 void ViewController::show(DisplayController &DC) {
+  // TODO add something like needsUpdate to view to avoid redraw
   if (!Views.at(ShownViewIdx)) {
-    DefaultView->show(DC);
+    if (LastView != DefaultView.get()) {
+      LastView = DefaultView.get();
+      DefaultView->show(DC);
+    }
     return;
   }
-  Views.at(ShownViewIdx)->show(DC);
+
+  if (LastView != Views.at(ShownViewIdx).get()) {
+    LastView = Views.at(ShownViewIdx).get();
+    Views.at(ShownViewIdx)->show(DC);
+  }
 }
 
 bool ViewController::setView(unsigned Idx, std::shared_ptr<View> V) {

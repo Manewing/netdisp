@@ -62,6 +62,7 @@ public:
   unsigned getShownViewIdx() const;
 
 private:
+  View *LastView = nullptr;
   std::shared_ptr<View> DefaultView;
   std::vector<std::shared_ptr<View>> Views;
 
