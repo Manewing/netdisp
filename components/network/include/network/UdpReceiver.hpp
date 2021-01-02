@@ -14,6 +14,8 @@ public:
 
   int recv(void *Dest, std::size_t Len) const override;
 
+  void close() override;
+
 private:
   int Socket = -1;
 };

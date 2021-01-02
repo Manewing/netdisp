@@ -42,18 +42,21 @@ UdpReceiver::UdpReceiver(int Port, bool IPv6) {
   }
 }
 
-UdpReceiver::~UdpReceiver() {
+UdpReceiver::~UdpReceiver() { close(); }
+
+bool UdpReceiver::isReady() const { return Socket >= 0; }
+
+int UdpReceiver::recv(void *Dest, std::size_t Len) const {
+  return ::recv(Socket, Dest, Len, 0);
+}
+
+void UdpReceiver::close() {
   if (isReady()) {
     close(Socket);
   }
 }
 
-bool UdpReceiver::isReady() const {
-  return Socket >= 0;
-}
 
-int UdpReceiver::recv(void * Dest, std::size_t Len) const {
-  return ::recv(Socket, Dest, Len, 0);
 }
 
 } // namespace network
