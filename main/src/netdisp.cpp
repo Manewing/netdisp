@@ -1,25 +1,17 @@
+#include <netdisp/Config.hpp>
 #include <netdisp/Led.hpp>
 #include <netdisp/Parser.hpp>
 #include <netdisp/View.hpp>
 #include <network/UdpReceiver.hpp>
 #include <network/WifiConnector.hpp>
 
+// FIXME #include <lcdgfx.h> breaks STL headers
 #include <netdisp/LcdgfxDisplay.hpp>
 
 #include <esp_log.h>
 #include <nvs_flash.h>
 
 #include <cstring>
-
-#define STR_HELPER(x) #x
-#define STR(x) STR_HELPER(x)
-
-#ifndef CONFIG_NETDISP_PORT
-#define NETDISP_PORT 5432
-#else
-#define NETDISP_PORT CONFIG_NETDISP_PORT
-#endif
-#define NETDISP_PORT_STR STR(NETDISP_PORT)
 
 namespace netdisp {
 
@@ -31,13 +23,12 @@ void main() {
   LedCtrl.setLed(1, true);
 
   auto &WifiConn = network::WifiConnector::getInstance();
-  if (!WifiConn.connect(CONFIG_ESP_WIFI_SSID, CONFIG_ESP_WIFI_PASSWORD,
-                        CONFIG_ESP_MAXIMUM_RETRY)) {
+  if (!WifiConn.connect(NETDISP_WIFI_SSID, NETDISP_WIFI_PASSWORD,
+                        NETDISP_WIFI_MAX_RETRY)) {
     return;
   }
 
-  constexpr int Port = 5432;
-  network::UdpReceiver Receiver(Port);
+  network::UdpReceiver Receiver(NETDISP_PORT);
   if (!Receiver.isReady()) {
     ESP_LOGE("NetDisp", "Could not setup UDP receiver");
     return;
