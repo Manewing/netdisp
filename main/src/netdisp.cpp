@@ -33,7 +33,9 @@ void main() {
     return;
   }
 
-  network::AsyncUdpReceiver AsyncRecv(NETDISP_PORT, 256);
+  // TODO add to config
+  constexpr unsigned MaxMessageLength = 2048;
+  network::AsyncUdpReceiver AsyncRecv(NETDISP_PORT, MaxMessageLength);
   if (!AsyncRecv.isReady()) {
     ESP_LOGE("NetDisp", "Could not setup async receiver");
     return;
@@ -53,7 +55,7 @@ void main() {
       ESP_LOGE("NetDisp", "Failed to receive data");
       return;
     }
-    ESP_LOGI("NetDisp", "Got message: %s", Buffer);
+    ESP_LOGI("NetDisp", "Got message of length %u", Count);
 
     netdisp::Parser Parser(Buffer, Count);
     if (auto Cmd = Parser.parse()) {
