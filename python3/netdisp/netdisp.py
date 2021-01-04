@@ -28,8 +28,8 @@ class NetDisp(object):
     def __getattribute__(self, name):
       if hasattr(CommandBuilder, name):
         cmd = self._getCmd()
-        def wrapper(args, **kwargs):
-          getattr(cmd, name)(args, **kwargs)
+        def wrapper(*args, **kwargs):
+          getattr(cmd, name)(*args, **kwargs)
           return self
         return wrapper
       return object.__getattribute__(self, name)
