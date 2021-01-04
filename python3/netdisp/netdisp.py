@@ -4,13 +4,16 @@ from netdisp.udpsender import UdpSender
 from netdisp.command import CommandBuilder
 
 class NetDisp(object):
-    def __init__(self, ip: str, port: int):
+    def __init__(self, ip: str, port: int, view: int = None):
       self._sender = UdpSender(ip, port)
       self._current_cmd = None
+      self._view = view
 
     def _getCmd(self) -> CommandBuilder:
       if self._current_cmd is None:
         self._current_cmd = CommandBuilder()
+        if self._view is not None:
+            self._current_cmd.select_view(self._view)
       return self._current_cmd
 
     def send(self):
