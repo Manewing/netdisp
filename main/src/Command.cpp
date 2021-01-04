@@ -68,7 +68,7 @@ void BlinkLedCmd::executeInternal(Context &Ctx) const {
 
 ShowTextCmd::ShowTextCmd(std::string Text, bool Raw, bool UCV)
     : UseCurrentView(UCV), TxtView() {
-  ESP_LOGI("Command", "execute show text: %s, raw=%s", Text.c_str(),
+  ESP_LOGI("Command", "prepare show text: %s, raw=%s", Text.c_str(),
            (Raw ? "yes" : "no"));
   if (Raw) {
     TxtView = std::make_shared<RawTextView>(std::move(Text));
@@ -80,6 +80,19 @@ ShowTextCmd::ShowTextCmd(std::string Text, bool Raw, bool UCV)
 void ShowTextCmd::executeInternal(Context &Ctx) const {
   unsigned ViewIdx = UseCurrentView ? Ctx.ViewCtrl.getCurrentViewIdx() : 0;
   Ctx.ViewCtrl.setView(ViewIdx, TxtView);
+}
+
+ShowBitmapCmd::ShowBitmapCmd(unsigned X, unsigned Y, unsigned Width,
+                             unsigned Height, const uint8_t *Data,
+                             unsigned Length) {
+  ESP_LOGI("Command",
+           "prepare show bitmap X: %u, Y: %u W: %u, H: %u, Len %u bytes", X, Y,
+           Width, Height, Length);
+  BmpView = std::make_shared<BitmapView>(X, Y, Width, Height, Data, Length);
+}
+
+void ShowBitmapCmd::executeInternal(Context &Ctx) const {
+  Ctx.ViewCtrl.setView(Ctx.ViewCtrl.getCurrentViewIdx(), BmpView);
 }
 
 } // namespace netdisp

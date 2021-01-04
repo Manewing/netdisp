@@ -83,6 +83,18 @@ protected:
   std::shared_ptr<View> TxtView;
 };
 
+class ShowBitmapCmd : public Command {
+public:
+  ShowBitmapCmd(unsigned X, unsigned Y, unsigned Width, unsigned Height,
+                const uint8_t *Data, unsigned Length);
+
+protected:
+  void executeInternal(Context &Ctx) const override;
+
+private:
+  std::shared_ptr<View> BmpView;
+};
+
 }
 
 #endif // #ifndef NETDISP_COMMAND_HPP
