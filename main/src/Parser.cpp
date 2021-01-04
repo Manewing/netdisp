@@ -9,6 +9,10 @@ namespace netdisp {
 ByteStream::ByteStream(uint8_t *Data, std::size_t Length)
     : Data(Data), Length(Length), Pos(0) {}
 
+bool ByteStream::hasData(std::size_t Count) const {
+  return Length >= (Pos + Count);
+}
+
 bool ByteStream::eof() const { return Pos >= Length; }
 
 std::size_t ByteStream::seek(std::size_t To) {
@@ -16,8 +20,8 @@ std::size_t ByteStream::seek(std::size_t To) {
   return Pos;
 }
 
-bool ByteStream::get(void *Dest, std::size_t Count) {
-  if (Length < (Pos + Count)) {
+bool ByteStream::getData(void *Dest, std::size_t Count) {
+  if (!hasData(Count)) {
     return false;
   }
   std::memcpy(Dest, Data + Pos, Count);
@@ -29,7 +33,7 @@ Parser::Parser(uint8_t *Data, std::size_t Length) : ByteStream(Data, Length) {}
 
 std::unique_ptr<Command> Parser::parse() {
   uint16_t Magic = 0;
-  if (!get<uint16_t>(Magic)) {
+  if (!get(Magic)) {
     return nullptr;
   }
 
@@ -67,28 +71,28 @@ std::unique_ptr<Command> Parser::parse() {
 
 std::unique_ptr<Command> Parser::parseNextCommand() {
   uint8_t CmdId;
-  if (!get<uint8_t>(CmdId)) {
+  if (!get(CmdId)) {
     return nullptr;
   }
 
   switch (CmdId) {
   case 0x00: {
     uint8_t Idx = 0;
-    if (!get<uint8_t>(Idx)) {
+    if (!get(Idx)) {
       return nullptr;
     }
     return std::unique_ptr<Command>(new SelectViewCmd(Idx));
   }
   case 0x01: {
     uint8_t Idx = 0;
-    if (!get<uint8_t>(Idx)) {
+    if (!get(Idx)) {
       return nullptr;
     }
     return std::unique_ptr<Command>(new ShowViewCmd(Idx));
   }
   case 0x02: {
     uint8_t LedInfo = 0;
-    if (!get<uint8_t>(LedInfo)) {
+    if (!get(LedInfo)) {
       return nullptr;
     }
     unsigned Led = (LedInfo >> 1) & 0xff;
@@ -97,10 +101,11 @@ std::unique_ptr<Command> Parser::parseNextCommand() {
   }
   case 0x03: {
     uint8_t Raw = false;
-    if (!get<uint8_t>(Raw)) {
+    if (!get(Raw)) {
       return nullptr;
     }
 
+    // FIXME add length of text argument
     // Rest of data is text
     const char *Buffer = reinterpret_cast<const char *>(getData() + getPos());
     std::string Text;
@@ -113,10 +118,23 @@ std::unique_ptr<Command> Parser::parseNextCommand() {
   }
   case 0x04: {
     uint8_t Led = 0, Times = 0;
-    if (!get<uint8_t>(Led) || !get<uint8_t>(Times)) {
+    if (!get(Led, Times)) {
       return nullptr;
     }
     return std::unique_ptr<Command>(new BlinkLedCmd(Led, Times));
+  }
+  case 0x5: {
+    uint16_t X = 0, Y = 0, Width = 0, Height = 0, Length = 0;
+    if (!get(X, Y, Width, Height, Length)) {
+      return nullptr;
+    }
+    if (!hasData(Length)) {
+      return nullptr;
+    }
+    auto Cmd = std::unique_ptr<Command>(
+        new ShowBitmapCmd(X, Y, Width, Height, getData() + getPos(), Length));
+    seek(getPos() + Length);
+    return Cmd;
   }
   default:
     break;
