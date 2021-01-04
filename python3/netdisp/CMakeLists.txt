@@ -1,5 +1,6 @@
 pyfile("__init__")
 pyfile("command")
+pyfile("image")
 pyfile("netdisp")
 pyfile("udpsender")
 

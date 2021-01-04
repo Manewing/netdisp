@@ -2,6 +2,8 @@
 
 import struct
 
+from netdisp.image import Bitmap
+
 
 def uint8(x) -> bytes:
     return bytes([x & 0xff])
@@ -38,6 +40,11 @@ class CommandBuilder(object):
     def show_bitmap(self, x: int, y: int, w: int, h: int, bitmap_data: bytes):
         self._bytes += (uint8(0x05) + uint16(x) + uint16(y) + uint16(w) +
                         uint16(h) + uint16(len(bitmap_data)) + bitmap_data)
+        return self
+
+    def show_image(self, x: int, y: int, max_w: int, max_h: int, path: str):
+        bitmap = Bitmap(path, max_w, max_h)
+        self.show_bitmap(x, y, bitmap.w, bitmap.h, bitmap.data)
         return self
 
     def finish(self) -> bytes:
