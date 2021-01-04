@@ -12,7 +12,7 @@ namespace netdisp {
 
 class View {
 public:
-  void show(DisplayController &DC);
+  void show(DisplayController &DC, bool ClearDisp = true);
 
   bool isDirty() const;
   void dirty();

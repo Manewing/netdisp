@@ -9,9 +9,12 @@
 
 namespace netdisp {
 
-void View::show(DisplayController &DC) {
+void View::show(DisplayController &DC, bool ClearDisp) {
   if (!isDirty()) {
     return;
+  }
+  if (ClearDisp) {
+    DC.clear();
   }
   showInternal(DC);
   IsDirty = false;
@@ -26,7 +29,6 @@ TextViewBase::TextViewBase(std::string Txt) : Text(std::move(Txt)) {}
 RawTextView::RawTextView(std::string Txt) : TextViewBase(std::move(Txt)) {}
 
 void RawTextView::showInternal(DisplayController &DC) {
-  DC.clear();
   DC.setFontStyle(DisplayController::FontStyle::NORMAL);
   DC.write(Text.c_str(), /*Line=*/0, /*Column=*/0, /*Wrap=*/true);
 }
@@ -37,7 +39,6 @@ void TextView::showInternal(DisplayController &DC) {
   static const std::string FormatChars = "*_~\n";
 
   // Clear screen and set normal style
-  DC.clear();
   DC.setFontStyle(DisplayController::FontStyle::NORMAL);
 
   std::size_t Last = 0;
@@ -120,7 +121,6 @@ void IdxInfoView::showInternal(DisplayController &DC) {
   unsigned Line = DC.getLines() / 2;
   unsigned Column = (DC.getColumns() - IdxStr.size()) / 2;
 
-  DC.clear();
   DC.setFontStyle(DisplayController::FontStyle::BOLD);
   DC.write(IdxStr.c_str(), Line, Column, /*Wrap=*/false);
 }
@@ -134,13 +134,10 @@ unsigned ViewController::getMaxViews() const { return Views.size(); }
 
 void ViewController::show(DisplayController &DC) {
   if (Notify) {
-
     if (Notify->isTimedout()) {
       clearNotification();
     } else {
-      if (Notify->isDirty()) {
-        Notify->show(DC);
-      }
+      Notify->show(DC);
 
       // Mark original view as dirty so its updated after notification is
       // cleared
