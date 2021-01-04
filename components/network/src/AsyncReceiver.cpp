@@ -7,7 +7,7 @@
 #include <esp_log.h>
 
 constexpr const char *TaskName = "async_recv";
-constexpr unsigned StackSizeInWords = 2048;
+constexpr unsigned StackSizeInWords = 4048;
 constexpr unsigned Priority = 1;
 
 namespace network {
