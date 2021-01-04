@@ -73,12 +73,13 @@ private:
 
 class ShowTextCmd : public Command {
 public:
-  ShowTextCmd(std::string Text, bool Raw);
+  ShowTextCmd(std::string Text, bool Raw, bool UseCurrentView = true);
 
 protected:
   void executeInternal(Context &Ctx) const override;
 
 protected:
+  bool UseCurrentView;
   std::shared_ptr<View> TxtView;
 };
 

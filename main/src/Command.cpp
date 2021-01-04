@@ -6,7 +6,6 @@
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 
-
 namespace netdisp {
 
 Command *Command::setNext(std::unique_ptr<Command> Next) {
@@ -50,8 +49,8 @@ void SetLedCmd::executeInternal(Context &Ctx) const {
   }
 }
 
-BlinkLedCmd::BlinkLedCmd(unsigned Led, unsigned Times): Led(Led), Times(Times) {
-}
+BlinkLedCmd::BlinkLedCmd(unsigned Led, unsigned Times)
+    : Led(Led), Times(Times) {}
 
 void BlinkLedCmd::executeInternal(Context &Ctx) const {
   ESP_LOGI("Command", "execute blink LED[%d] %d times", Led, Times);
@@ -67,7 +66,8 @@ void BlinkLedCmd::executeInternal(Context &Ctx) const {
   }
 }
 
-ShowTextCmd::ShowTextCmd(std::string Text, bool Raw) : TxtView() {
+ShowTextCmd::ShowTextCmd(std::string Text, bool Raw, bool UCV)
+    : UseCurrentView(UCV), TxtView() {
   ESP_LOGI("Command", "execute show text: %s, raw=%s", Text.c_str(),
            (Raw ? "yes" : "no"));
   if (Raw) {
@@ -77,9 +77,9 @@ ShowTextCmd::ShowTextCmd(std::string Text, bool Raw) : TxtView() {
   }
 }
 
-
 void ShowTextCmd::executeInternal(Context &Ctx) const {
-  Ctx.ViewCtrl.setView(Ctx.ViewCtrl.getCurrentViewIdx(), TxtView);
+  unsigned ViewIdx = UseCurrentView ? Ctx.ViewCtrl.getCurrentViewIdx() : 0;
+  Ctx.ViewCtrl.setView(ViewIdx, TxtView);
 }
 
 } // namespace netdisp

@@ -41,7 +41,8 @@ std::unique_ptr<Command> Parser::parse() {
     const char *Buffer = reinterpret_cast<const char *>(getData());
     std::string Text;
     Text.assign(Buffer, getLength());
-    return std::unique_ptr<Command>(new ShowTextCmd(std::move(Text), false));
+    return std::unique_ptr<Command>(
+        new ShowTextCmd(std::move(Text), false, false));
   }
 
   std::unique_ptr<Command> FirstCmd = parseNextCommand();
@@ -54,7 +55,7 @@ std::unique_ptr<Command> Parser::parse() {
   while (!eof()) {
     std::unique_ptr<Command> NextCmd = parseNextCommand();
     if (!NextCmd) {
-    // TODO dump message content
+      // TODO dump message content
       return nullptr;
     }
 
