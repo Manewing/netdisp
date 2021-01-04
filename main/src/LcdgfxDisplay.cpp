@@ -56,4 +56,10 @@ void LcdgfxDisplayController::write(const std::string &Text, unsigned Line,
   }
 }
 
+void LcdgfxDisplayController::drawBitmap(unsigned X, unsigned Y, unsigned Width,
+                                         unsigned Height,
+                                         const uint8_t *Bitmap) {
+  Display.drawBitmap1(X, Y, Width, Height, Bitmap);
+}
+
 } // namespace netdisp

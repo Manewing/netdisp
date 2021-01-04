@@ -17,6 +17,8 @@ public:
   void clear() override;
   void write(const std::string &Text, unsigned Line = 0, unsigned Column = 0,
              bool Wrap = false) override;
+  void drawBitmap(unsigned X, unsigned Y, unsigned Width, unsigned Height,
+                  const uint8_t *Bitmap) override;
 
 private:
   DisplaySSD1306_128x64_I2C Display;
