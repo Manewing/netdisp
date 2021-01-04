@@ -1,0 +1,12 @@
+if [[ -v BASH_VERSION ]]
+then
+  export NETDISP_HOME="$(readlink -f "$(dirname "${BASH_SOURCE[0]}")")"
+elif [[ -v ZSH_VERSION ]]
+then
+  export NETDISP_HOME="$(readlink -f "$(dirname "${(%):-%x}")")"
+else
+  echo "Unsupported shell, only bash and zsh are supported." >&2
+  return 2
+fi
+export PYTHONPATH="$NETDISP_HOME/lib/python3/dist-packages/${PYTHONPATH:+:${PYTHONPATH}}"
+

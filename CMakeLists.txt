@@ -8,4 +8,31 @@ include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 
 set(EXTRA_COMPONENT_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/components)
 
+set(
+  PYTHON_OUT_DIR
+  ${CMAKE_BINARY_DIR}/lib/python3/dist-packages/netdisp
+)
+set(
+  PYTHON_OUT_INSTALL_DIR
+  lib/python3/dist-packages/netdisp
+)
+
+add_subdirectory(python3)
+
+add_custom_command(
+  OUTPUT
+  ${CMAKE_CURRENT_BINARY_DIR}/exports
+  DEPENDS
+  ${CMAKE_CURRENT_SOURCE_DIR}/exports
+  COMMAND
+  cp -a ${CMAKE_CURRENT_SOURCE_DIR}/exports ${CMAKE_CURRENT_BINARY_DIR}/exports
+)
+
+add_custom_target(
+  copy_exports
+  ALL
+  DEPENDS
+  exports
+)
+
 project(netdisp)
