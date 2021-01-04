@@ -1,9 +1,11 @@
 #include <algorithm>
 #include <cassert>
+#include <cstring>
 #include <netdisp/View.hpp>
 
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
+#include <netdisp/Display.hpp>
 
 namespace netdisp {
 
@@ -89,6 +91,17 @@ void TextView::write(DisplayController &DC, std::size_t Start,
 
   Column += Count;
   WriteCentered = false;
+}
+
+BitmapView::BitmapView(unsigned X, unsigned Y, unsigned Width, unsigned Height,
+                       const uint8_t *BmpData, unsigned Length)
+    : X(X), Y(Y), Width(Width), Height(Height),
+      BitmapData(new uint8_t[Length]) {
+  std::memcpy(BitmapData.get(), BmpData, Length);
+}
+
+void BitmapView::showInternal(DisplayController &DC) {
+  DC.drawBitmap(X, Y, Width, Height, BitmapData.get());
 }
 
 Notification::Notification(unsigned TimeoutMs)

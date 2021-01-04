@@ -4,7 +4,9 @@
 #include <memory>
 #include <vector>
 
-#include <netdisp/Display.hpp>
+namespace netdisp {
+class DisplayController;
+}
 
 namespace netdisp {
 
@@ -42,7 +44,6 @@ class TextView : public TextViewBase {
 public:
   TextView(std::string Text);
 
-
 protected:
   void showInternal(DisplayController &DC) override;
   void write(DisplayController &DC, std::size_t Start, std::size_t End);
@@ -53,6 +54,23 @@ private:
   bool WriteCentered = false;
 };
 
+class BitmapView : public View {
+public:
+  BitmapView(unsigned X, unsigned Y, unsigned Width, unsigned Height,
+             const uint8_t *Data, unsigned Length);
+
+protected:
+  void showInternal(DisplayController &DC) override;
+
+private:
+  unsigned X;
+  unsigned Y;
+  unsigned Width;
+  unsigned Height;
+  std::unique_ptr<uint8_t> BitmapData;
+};
+
+// TODO refactor, take view to show as argument
 class Notification : public View {
 public:
   Notification(unsigned TimeoutMs);
