@@ -47,5 +47,12 @@ class CommandBuilder(object):
         self.show_bitmap(x, y, bitmap.w, bitmap.h, bitmap.data)
         return self
 
+    def create_composite(self):
+        self._bytes += uint8(0x6)
+        return self
+
+    def end_view(self):
+        self._bytes += uint8(0x8)
+
     def finish(self) -> bytes:
         return self._bytes

@@ -71,7 +71,13 @@ private:
   unsigned Times;
 };
 
-class ShowTextCmd : public Command {
+class ViewCommand : public Command {
+protected:
+  void setView(Context &Ctx, unsigned Idx,
+               const std::shared_ptr<View> &V) const;
+};
+
+class ShowTextCmd : public ViewCommand {
 public:
   ShowTextCmd(std::string Text, bool Raw, bool UseCurrentView = true);
 
@@ -83,7 +89,7 @@ protected:
   std::shared_ptr<View> TxtView;
 };
 
-class ShowBitmapCmd : public Command {
+class ShowBitmapCmd : public ViewCommand {
 public:
   ShowBitmapCmd(unsigned X, unsigned Y, unsigned Width, unsigned Height,
                 const uint8_t *Data, unsigned Length);
@@ -93,6 +99,22 @@ protected:
 
 private:
   std::shared_ptr<View> BmpView;
+};
+
+class CreateCompositeViewCmd : public ViewCommand {
+public:
+  CreateCompositeViewCmd();
+
+protected:
+  void executeInternal(Context &Ctx) const override;
+
+protected:
+  std::shared_ptr<View> CompView;
+};
+
+class EndViewCmd : public Command {
+protected:
+  void executeInternal(Context &Ctx) const override;
 };
 
 } // namespace netdisp

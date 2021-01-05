@@ -2,6 +2,7 @@ idf_component_register(
   SRCS
     "src/CanvasView.cpp"
     "src/Command.cpp"
+    "src/CompositeView.cpp"
     "src/Display.cpp"
     "src/LcdgfxDisplay.cpp"
     "src/Led.cpp"

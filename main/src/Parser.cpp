@@ -136,6 +136,13 @@ std::unique_ptr<Command> Parser::parseNextCommand() {
     seek(getPos() + Length);
     return Cmd;
   }
+  case 0x6: {
+    return std::unique_ptr<Command>(new CreateCompositeViewCmd());
+  }
+  case 0x8: {
+    return std::unique_ptr<Command>(new EndViewCmd());
+  }
+
   default:
     break;
   }

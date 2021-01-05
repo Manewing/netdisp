@@ -2,8 +2,10 @@
 #define NETDISP_CONTEXT_HPP
 
 #include <mutex>
+#include <stack>
 
 namespace netdisp {
+class View;
 class LedController;
 class ViewController;
 } // namespace netdisp
@@ -17,10 +19,14 @@ public:
 
   LedController &LedCtrl;
   ViewController &ViewCtrl;
+  std::stack<std::shared_ptr<View>> ParentViews;
 
   void lock() { Mtx.lock(); }
 
-  void unlock() { Mtx.unlock(); }
+  void unlock() {
+    ParentViews = {};
+    Mtx.unlock();
+  }
 
 private:
   std::mutex Mtx;

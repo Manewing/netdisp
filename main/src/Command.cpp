@@ -1,5 +1,6 @@
 #include <netdisp/CanvasView.hpp>
 #include <netdisp/Command.hpp>
+#include <netdisp/CompositeView.hpp>
 #include <netdisp/Led.hpp>
 #include <netdisp/TextView.hpp>
 #include <netdisp/View.hpp>
@@ -69,6 +70,15 @@ void BlinkLedCmd::executeInternal(Context &Ctx) const {
   }
 }
 
+void ViewCommand::setView(Context &Ctx, unsigned Idx,
+                          const std::shared_ptr<View> &V) const {
+  if (Ctx.ParentViews.empty()) {
+    Ctx.ViewCtrl.setView(Idx, V);
+  } else {
+    Ctx.ParentViews.top()->addView(V);
+  }
+}
+
 ShowTextCmd::ShowTextCmd(std::string Text, bool Raw, bool UCV)
     : UseCurrentView(UCV), TxtView() {
   ESP_LOGI("Command", "prepare show text: %s, raw=%s", Text.c_str(),
@@ -82,7 +92,7 @@ ShowTextCmd::ShowTextCmd(std::string Text, bool Raw, bool UCV)
 
 void ShowTextCmd::executeInternal(Context &Ctx) const {
   unsigned ViewIdx = UseCurrentView ? Ctx.ViewCtrl.getCurrentViewIdx() : 0;
-  Ctx.ViewCtrl.setView(ViewIdx, TxtView);
+  setView(Ctx, ViewIdx, TxtView);
 }
 
 ShowBitmapCmd::ShowBitmapCmd(unsigned X, unsigned Y, unsigned Width,
@@ -95,7 +105,26 @@ ShowBitmapCmd::ShowBitmapCmd(unsigned X, unsigned Y, unsigned Width,
 }
 
 void ShowBitmapCmd::executeInternal(Context &Ctx) const {
-  Ctx.ViewCtrl.setView(Ctx.ViewCtrl.getCurrentViewIdx(), BmpView);
+  setView(Ctx, Ctx.ViewCtrl.getCurrentViewIdx(), BmpView);
+}
+
+CreateCompositeViewCmd::CreateCompositeViewCmd() {
+  CompView = std::make_shared<CompositeView>();
+}
+
+void CreateCompositeViewCmd::executeInternal(Context &Ctx) const {
+  ESP_LOGI("Command", "execute create composite, at stack %u",
+           Ctx.ParentViews.size());
+  setView(Ctx, Ctx.ViewCtrl.getCurrentViewIdx(), CompView);
+  Ctx.ParentViews.push(CompView);
+}
+
+void EndViewCmd::executeInternal(Context &Ctx) const {
+  ESP_LOGI("Command", "execute end view, stack %u", Ctx.ParentViews.size());
+  if (Ctx.ParentViews.empty()) {
+    return;
+  }
+  Ctx.ParentViews.pop();
 }
 
 } // namespace netdisp
