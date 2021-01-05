@@ -22,10 +22,8 @@ namespace netdisp {
 void main() {
   LcdgfxDisplayController DispCtrl;
 
-  // TODO add pins to config
-  netdisp::LedController LedCtrl({17, 16});
-  LedCtrl.setLed(0, true);
-  LedCtrl.setLed(1, true);
+  netdisp::LedController LedCtrl({NETDISP_LED_0_PIN, NETDISP_LED_1_PIN});
+  LedCtrl.setLeds(true);
 
   auto &WifiConn = network::WifiConnector::getInstance();
   if (!WifiConn.connect(NETDISP_WIFI_SSID, NETDISP_WIFI_PASSWORD,
@@ -33,9 +31,7 @@ void main() {
     return;
   }
 
-  // TODO add to config
-  constexpr unsigned MaxMessageLength = 2048;
-  network::AsyncUdpReceiver AsyncRecv(NETDISP_PORT, MaxMessageLength);
+  network::AsyncUdpReceiver AsyncRecv(NETDISP_PORT, NETDISP_MAX_MSG_LEN);
   if (!AsyncRecv.isReady()) {
     ESP_LOGE("NetDisp", "Could not setup async receiver");
     return;
@@ -43,10 +39,9 @@ void main() {
 
   auto DefaultView = std::make_shared<TextView>(
       "~*Ready*\n\n~" + WifiConn.getIpAddrStr() + "\n~" NETDISP_PORT_STR);
-  netdisp::ViewController ViewCtrl(DefaultView, 10);
+  netdisp::ViewController ViewCtrl(DefaultView, NETDISP_VIEW_COUNT);
 
-  LedCtrl.setLed(0, false);
-  LedCtrl.setLed(1, false);
+  LedCtrl.setLeds(false);
 
   netdisp::Context Ctx{LedCtrl, ViewCtrl};
 
@@ -67,8 +62,7 @@ void main() {
     }
   });
 
-  // TODO add pins to config
-  netdisp::RotEncController RotEnc(19, 18);
+  netdisp::RotEncController RotEnc(NETDISP_ROTENC_PIN_A, NETDISP_ROTENC_PIN_B);
 
   int LastPosition = 0;
   while (1) {

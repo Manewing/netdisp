@@ -21,4 +21,39 @@ menu "Network Display Configuration"
         default 5432
         help
             The port the network display is supposed to listen to.
+    config NETDISP_MAX_MSG_LEN
+        int "Maximum Message Length"
+        default 2048
+        help
+            Maximum length of message to be received.
+    config NETDISP_LED_0_PIN
+        int "LED 0 GPIO Pin"
+        range 0 33
+        default 17
+        help
+            GPIO pin of LED 0, will be set to high to turn on LED.
+    config NETDISP_LED_1_PIN
+        int "LED 1 GPIO Pin"
+        range 0 33
+        default 16
+        help
+            GPIO pin of LED 1, will be set to high to turn on LED.
+    config NETDISP_ROTENC_PIN_A
+        int "Rotary Encoder Pin A"
+        range 0 33
+        default 19
+        help
+            GPIO pin for rotary encoder Signal A.
+    config NETDISP_ROTENC_PIN_B
+        int "Rotary Encoder Pin B"
+        range 0 33
+        default 18
+        help
+            GPIO pin for rotary encoder Signal B.
+     config NETDISP_VIEW_COUNT
+        int "Netdisp View Count"
+        range 1 100
+        default 10
+        help
+            Number of individual views for the netdisp
 endmenu
