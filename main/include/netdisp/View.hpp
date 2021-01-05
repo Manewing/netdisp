@@ -12,16 +12,7 @@ namespace netdisp {
 
 class View {
 public:
-  void show(DisplayController &DC, bool ClearDisp = true);
-
-  bool isDirty() const;
-  void dirty();
-
-protected:
-  virtual void showInternal(DisplayController &DC) = 0;
-
-private:
-  bool IsDirty = true;
+  virtual void show(DisplayController &DC) = 0;
 };
 
 class TextViewBase : public View {
@@ -36,16 +27,16 @@ class RawTextView : public TextViewBase {
 public:
   RawTextView(std::string Text);
 
-protected:
-  void showInternal(DisplayController &DC) override;
+  void show(DisplayController &DC) override;
 };
 
 class TextView : public TextViewBase {
 public:
   TextView(std::string Text);
 
+  void show(DisplayController &DC) override;
+
 protected:
-  void showInternal(DisplayController &DC) override;
   void write(DisplayController &DC, std::size_t Start, std::size_t End);
 
 private:
@@ -59,8 +50,7 @@ public:
   BitmapView(unsigned X, unsigned Y, unsigned Width, unsigned Height,
              const uint8_t *Data, unsigned Length);
 
-protected:
-  void showInternal(DisplayController &DC) override;
+  void show(DisplayController &DC) override;
 
 private:
   unsigned X;
@@ -85,8 +75,7 @@ class IdxInfoView : public Notification {
 public:
   IdxInfoView(unsigned Idx, unsigned TimeoutMs);
 
-protected:
-  void showInternal(DisplayController &DC) override;
+  void show(DisplayController &DC) override;
 
 private:
   unsigned Idx;

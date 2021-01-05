@@ -9,33 +9,18 @@
 
 namespace netdisp {
 
-void View::show(DisplayController &DC, bool ClearDisp) {
-  if (!isDirty()) {
-    return;
-  }
-  if (ClearDisp) {
-    DC.clear();
-  }
-  showInternal(DC);
-  IsDirty = false;
-}
-
-bool View::isDirty() const { return IsDirty; }
-
-void View::dirty() { IsDirty = true; }
-
 TextViewBase::TextViewBase(std::string Txt) : Text(std::move(Txt)) {}
 
 RawTextView::RawTextView(std::string Txt) : TextViewBase(std::move(Txt)) {}
 
-void RawTextView::showInternal(DisplayController &DC) {
+void RawTextView::show(DisplayController &DC) {
   DC.setFontStyle(DisplayController::FontStyle::NORMAL);
   DC.write(Text.c_str(), /*Line=*/0, /*Column=*/0, /*Wrap=*/true);
 }
 
 TextView::TextView(std::string Txt) : TextViewBase(std::move(Txt)) {}
 
-void TextView::showInternal(DisplayController &DC) {
+void TextView::show(DisplayController &DC) {
   static const std::string FormatChars = "*_~\n";
 
   // Clear screen and set normal style
@@ -101,7 +86,7 @@ BitmapView::BitmapView(unsigned X, unsigned Y, unsigned Width, unsigned Height,
   std::memcpy(BitmapData.get(), BmpData, Length);
 }
 
-void BitmapView::showInternal(DisplayController &DC) {
+void BitmapView::show(DisplayController &DC) {
   DC.drawBitmap(X, Y, Width, Height, BitmapData.get());
 }
 
@@ -115,7 +100,7 @@ bool Notification::isTimedout() const {
 IdxInfoView::IdxInfoView(unsigned Idx, unsigned TimeoutMs)
     : Notification(TimeoutMs), Idx(Idx) {}
 
-void IdxInfoView::showInternal(DisplayController &DC) {
+void IdxInfoView::show(DisplayController &DC) {
   auto IdxStr = std::to_string(Idx);
 
   unsigned Line = DC.getLines() / 2;
@@ -133,29 +118,21 @@ ViewController::ViewController(std::shared_ptr<View> DefView, unsigned MaxViews)
 unsigned ViewController::getMaxViews() const { return Views.size(); }
 
 void ViewController::show(DisplayController &DC) {
+  DC.clear();
+
   if (Notify) {
     if (Notify->isTimedout()) {
       clearNotification();
     } else {
       Notify->show(DC);
-
-      // Mark original view as dirty so its updated after notification is
-      // cleared
-      getViewToShow().dirty();
+      DC.flush();
       return;
     }
   }
 
-  // Get the view to show, its either the view at the current show index
-  // or the default view
-  auto &V = getViewToShow();
-  V.show(DC);
+  getViewToShow().show(DC);
 
-  // If we do not show the default view, mark the default view as dirty so
-  // its actually shown when switched to it
-  if (&V != DefaultView.get()) {
-    DefaultView->dirty();
-  }
+  DC.flush();
 }
 
 void ViewController::setDefaultView(std::shared_ptr<View> DefView) {
@@ -189,12 +166,6 @@ unsigned ViewController::getCurrentViewIdx() const { return CurrentViewIdx; }
 bool ViewController::showView(unsigned Idx) {
   if (Idx >= getMaxViews()) {
     return false;
-  }
-
-  // Mark currently shown view as dirty so its actually shown when switched
-  // back to it
-  if (Views.at(ShownViewIdx)) {
-    Views.at(ShownViewIdx)->dirty();
   }
 
   setNotification(std::make_shared<IdxInfoView>(Idx, /*TimeoutMs=*/500));

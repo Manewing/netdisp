@@ -1,5 +1,6 @@
 #include <netdisp/LcdgfxDisplay.hpp>
 
+#include <cstring>
 namespace netdisp {
 
 namespace {
@@ -21,24 +22,29 @@ EFontStyle getEFontStyle(DisplayController::FontStyle Style) {
 constexpr unsigned FontW = 8;
 constexpr unsigned FontH = 16;
 
-LcdgfxDisplayController::LcdgfxDisplayController() : Display(-1) {
+LcdgfxDisplayController::LcdgfxDisplayController()
+    : Display(-1), CanvasData(new uint8_t[1024]),
+      Canvas(128, 64, CanvasData.get()) {
   Display.begin();
-  Display.setFixedFont(ssd1306xled_font8x16); // font WxH
-  Display.fill(0xffff);
   Display.clear();
+  Canvas.clear();
+  Canvas.setFixedFont(ssd1306xled_font8x16); // font WxH
+  Canvas.setMode(CANVAS_MODE_TRANSPARENT);
 }
 
+unsigned LcdgfxDisplayController::getWidth() const { return 128; }
+
+unsigned LcdgfxDisplayController::getHeight() const { return 64; }
+
 unsigned LcdgfxDisplayController::getColumns() const {
-  // Broken interface Display::width should be const
-  return const_cast<DisplaySSD1306_128x64_I2C *>(&Display)->width() / FontW;
+  return getWidth() / FontW;
 }
 
 unsigned LcdgfxDisplayController::getLines() const {
-  // Broken interface Display::height should be const
-  return const_cast<DisplaySSD1306_128x64_I2C *>(&Display)->height() / FontH;
+  return getHeight() / FontH;
 }
 
-void LcdgfxDisplayController::clear() { Display.clear(); }
+void LcdgfxDisplayController::clear() { Canvas.clear(); }
 
 void LcdgfxDisplayController::write(const std::string &Text, unsigned Line,
                                     unsigned Column, bool Wrap) {
@@ -49,17 +55,19 @@ void LcdgfxDisplayController::write(const std::string &Text, unsigned Line,
   EFontStyle Efs = getEFontStyle(Style);
 
   if (Wrap) {
-    Display.printFixed(Column * FontW, Line * FontH, Text.c_str(), Efs);
+    Canvas.printFixed(Column * FontW, Line * FontH, Text.c_str(), Efs);
   } else {
-    Display.printFixed(Column * FontW, Line * FontH,
-                       Text.substr(0, getColumns()).c_str(), Efs);
+    Canvas.printFixed(Column * FontW, Line * FontH,
+                      Text.substr(0, getColumns()).c_str(), Efs);
   }
 }
 
 void LcdgfxDisplayController::drawBitmap(unsigned X, unsigned Y, unsigned Width,
                                          unsigned Height,
                                          const uint8_t *Bitmap) {
-  Display.drawBitmap1(X, Y, Width, Height, Bitmap);
+  Canvas.drawBitmap1(X, Y, Width, Height, Bitmap);
 }
+
+void LcdgfxDisplayController::flush() { Display.drawCanvas(0, 0, Canvas); }
 
 } // namespace netdisp
