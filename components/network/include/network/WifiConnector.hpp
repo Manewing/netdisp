@@ -34,8 +34,8 @@ protected:
   void handleWifiEvent(int32_t EventId, void *EventData);
 
   // Callbacks to handle ESP IP events
-  static void handleIpEventCallback(void *Arg, const char *EventBase, int32_t EventId,
-                             void *EventData);
+  static void handleIpEventCallback(void *Arg, const char *EventBase,
+                                    int32_t EventId, void *EventData);
   void handleIpEvent(int32_t EventId, void *EventData);
 
 private:

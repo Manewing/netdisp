@@ -1,15 +1,15 @@
 #ifndef NETWORK_ASYNC_RECEIVER_HPP
 #define NETWORK_ASYNC_RECEIVER_HPP
 
-#include <stdint.h>
 #include <functional>
 #include <network/Receiver.hpp>
+#include <stdint.h>
 
 namespace network {
 
 class AsyncReceiver {
 public:
-  typedef std::function<void(uint8_t*, int)> Callback;
+  typedef std::function<void(uint8_t *, int)> Callback;
 
 public:
   AsyncReceiver(Receiver &Recv, unsigned MaxMsgLen = 256);
@@ -36,6 +36,6 @@ private:
   void *TaskHandle = nullptr;
 };
 
-}
+} // namespace network
 
 #endif // #ifndef NETWORK_ASYNC_RECEIVER_HPP

@@ -1,18 +1,19 @@
-#include <network/WifiConnector.hpp>
 #include <cstring>
+#include <network/WifiConnector.hpp>
 
+#include <esp_event.h>
 #include <esp_log.h>
 #include <esp_wifi.h>
-#include <esp_event.h>
 #include <freertos/event_groups.h>
 
 #define LOGGER_TAG "WifiConnector"
 
-/* The event group allows multiple bits for each event, but we only care about two events:
+/* The event group allows multiple bits for each event, but we only care about
+ * two events:
  * - we are connected to the AP with an IP
  * - we failed to connect after the maximum amount of retries */
 #define WIFI_CONNECTED_BIT BIT0
-#define WIFI_FAIL_BIT      BIT1
+#define WIFI_FAIL_BIT BIT1
 
 namespace network {
 
@@ -43,14 +44,12 @@ bool WifiConnector::connect(std::string const &SSID,
   return Connected;
 }
 
-uint32_t WifiConnector::getIpAddr() const {
-  return Ipv4Addr;
-}
+uint32_t WifiConnector::getIpAddr() const { return Ipv4Addr; }
 
 std::string WifiConnector::getIpAddrStr() const {
   char Buffer[16];
   // FIXME use proper conversion function
-  const uint8_t *Addr = reinterpret_cast<const uint8_t*>(&Ipv4Addr);
+  const uint8_t *Addr = reinterpret_cast<const uint8_t *>(&Ipv4Addr);
   sprintf(Buffer, "%d.%d.%d.%d", Addr[0], Addr[1], Addr[2], Addr[3]);
   return std::string(Buffer);
 }
@@ -71,9 +70,9 @@ void WifiConnector::startWifi(std::string const &SSID,
   std::memset(&WifiConfig, 0, sizeof(WifiConfig));
 
   std::memcpy(WifiConfig.sta.ssid, SSID.c_str(),
-         std::min(sizeof(WifiConfig.sta.ssid), SSID.size()));
+              std::min(sizeof(WifiConfig.sta.ssid), SSID.size()));
   std::memcpy(WifiConfig.sta.password, Password.c_str(),
-         std::min(sizeof(WifiConfig.sta.password), Password.size()));
+              std::min(sizeof(WifiConfig.sta.password), Password.size()));
 
   WifiConfig.sta.threshold.authmode = WIFI_AUTH_WPA2_PSK;
   WifiConfig.sta.pmf_cfg.capable = true;

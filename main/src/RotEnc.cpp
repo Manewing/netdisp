@@ -8,7 +8,7 @@ RotEncController::RotEncController(int PinA, int PinB, bool HalsSteps,
   ESP_ERROR_CHECK(gpio_install_isr_service(0));
 
   ESP_ERROR_CHECK(rotary_encoder_init(&Info, static_cast<gpio_num_t>(PinA),
-      static_cast<gpio_num_t>(PinB)));
+                                      static_cast<gpio_num_t>(PinB)));
   ESP_ERROR_CHECK(rotary_encoder_enable_half_steps(&Info, HalsSteps));
 
   if (Flip) {

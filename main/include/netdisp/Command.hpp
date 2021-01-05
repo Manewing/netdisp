@@ -95,6 +95,6 @@ private:
   std::shared_ptr<View> BmpView;
 };
 
-}
+} // namespace netdisp
 
 #endif // #ifndef NETDISP_COMMAND_HPP

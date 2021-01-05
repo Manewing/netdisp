@@ -1,10 +1,10 @@
-#include <network/AsyncReceiver.hpp>
-#include <memory>
 #include <cstring>
+#include <memory>
+#include <network/AsyncReceiver.hpp>
 
+#include <esp_log.h>
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
-#include <esp_log.h>
 
 constexpr const char *TaskName = "async_recv";
 constexpr unsigned StackSizeInWords = 4048;
@@ -36,12 +36,9 @@ void task(void *Arg) {
 } // namespace
 
 AsyncReceiver::AsyncReceiver(Receiver &Rcv, unsigned MaxMsgLen)
-    : Recv(Rcv), MaxMsgLen(MaxMsgLen), OnRecv([](uint8_t*, int) {}) {
-}
+    : Recv(Rcv), MaxMsgLen(MaxMsgLen), OnRecv([](uint8_t *, int) {}) {}
 
-AsyncReceiver::~AsyncReceiver() {
-  close();
-}
+AsyncReceiver::~AsyncReceiver() { close(); }
 
 void AsyncReceiver::start() {
   auto Ret = xTaskCreate(task, TaskName, StackSizeInWords, this, Priority,
@@ -52,9 +49,7 @@ void AsyncReceiver::start() {
   }
 }
 
-bool AsyncReceiver::isReady() const {
-  return TaskHandle != nullptr;
-}
+bool AsyncReceiver::isReady() const { return TaskHandle != nullptr; }
 
 void AsyncReceiver::onRecv(Callback OnRcv) { OnRecv = std::move(OnRcv); }
 
@@ -65,18 +60,12 @@ void AsyncReceiver::close() {
   Recv.close();
 }
 
+Receiver &AsyncReceiver::getReceiver() { return Recv; }
 
-Receiver &AsyncReceiver::getReceiver() {
-  return Recv;
-}
-
-unsigned AsyncReceiver::getMaxMsgLen() const {
-  return MaxMsgLen;
-}
+unsigned AsyncReceiver::getMaxMsgLen() const { return MaxMsgLen; }
 
 AsyncReceiver::Callback const &AsyncReceiver::getCallback() const {
   return OnRecv;
 }
-
 
 } // namespace network
