@@ -10,6 +10,7 @@ public:
   LedController(std::vector<int> LedPins);
 
   bool setLed(unsigned Led, bool State) const;
+  bool setLeds(bool State) const;
 
 private:
   std::vector<int> LedPins;

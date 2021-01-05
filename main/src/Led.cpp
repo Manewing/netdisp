@@ -27,8 +27,17 @@ bool LedController::setLed(unsigned Led, bool State) const {
   if (Led >= LedPins.size() || LedPins.at(Led) == -1) {
     return false;
   }
-  return gpio_set_level(static_cast<gpio_num_t>(LedPins.at(Led)),
-                        State ? 1 : 0) == ESP_OK;
+  return gpio_set_level(static_cast<gpio_num_t>(LedPins.at(Led)), State) ==
+         ESP_OK;
+}
+
+bool LedController::setLeds(bool State) const {
+  for (auto const &LedPin : LedPins) {
+    if (gpio_set_level(static_cast<gpio_num_t>(LedPin), State) != ESP_OK) {
+      return false;
+    }
+  }
+  return true;
 }
 
 } // namespace netdisp
