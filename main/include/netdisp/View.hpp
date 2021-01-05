@@ -101,6 +101,8 @@ public:
 
   void show(DisplayController &DC);
 
+  void setDefaultView(std::shared_ptr<View> DefaultView);
+
   bool setView(unsigned Idx, std::shared_ptr<View> V);
   // delete view
 

@@ -158,6 +158,10 @@ void ViewController::show(DisplayController &DC) {
   }
 }
 
+void ViewController::setDefaultView(std::shared_ptr<View> DefView) {
+  DefaultView = DefView;
+}
+
 bool ViewController::setView(unsigned Idx, std::shared_ptr<View> V) {
   if (Idx >= getMaxViews()) {
     return false;
