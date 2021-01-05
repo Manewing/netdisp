@@ -32,7 +32,8 @@ class CommandBuilder(object):
         return self
 
     def show_text(self, text: str, raw: bool = False, encoding: str = 'utf-8'):
-        self._bytes += uint8(0x03) + uint8(raw) + text.encode(encoding)
+        self._bytes += uint8(0x03) + uint8(raw) + uint8(
+            len(text)) + text[:0xff + 1].encode(encoding)
         return self
 
     # TODO blink_led

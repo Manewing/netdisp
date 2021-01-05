@@ -100,19 +100,18 @@ std::unique_ptr<Command> Parser::parseNextCommand() {
     return std::unique_ptr<Command>(new SetLedCmd(Led, State));
   }
   case 0x03: {
-    uint8_t Raw = false;
-    if (!get(Raw)) {
+    uint8_t Raw = false, Length = 0;
+    if (!get(Raw, Length)) {
       return nullptr;
     }
 
-    // FIXME add length of text argument
-    // Rest of data is text
+    // Assign text from buffer plus current position and given length
     const char *Buffer = reinterpret_cast<const char *>(getData() + getPos());
     std::string Text;
-    Text.assign(Buffer, getLength() - getPos());
+    Text.assign(Buffer, Length);
 
-    // take up rest of message buffer
-    seek(getLength());
+    // Consume the memory
+    seek(getPos() +  Length);
 
     return std::unique_ptr<Command>(new ShowTextCmd(std::move(Text), Raw));
   }
