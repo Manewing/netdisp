@@ -15,7 +15,7 @@ void RawTextView::show(DisplayController &DC) {
 TextView::TextView(std::string Txt) : TextViewBase(std::move(Txt)) {}
 
 void TextView::show(DisplayController &DC) {
-  static const std::string FormatChars = "*_~\n";
+  static const std::string FormatChars = "#*_~\n";
 
   // Clear screen and set normal style
   DC.setFontStyle(DisplayController::FontStyle::NORMAL);
@@ -24,6 +24,7 @@ void TextView::show(DisplayController &DC) {
   Line = 0;
   Column = 0;
   WriteCentered = false;
+  WriteLarge = false;
 
   for (std::size_t Idx = 0; Idx < Text.size(); Idx++) {
     if (FormatChars.find(Text[Idx]) == std::string::npos) {
@@ -48,6 +49,8 @@ void TextView::show(DisplayController &DC) {
     case '~':
       WriteCentered = true;
       break;
+    case '#':
+      WriteLarge = true;
     default:
       break;
     }
@@ -63,14 +66,23 @@ void TextView::write(DisplayController &DC, std::size_t Start,
     return;
   }
 
+  unsigned Factor = WriteLarge ? 2 : 1;
+
   auto TextSection = Text.substr(Start, Count);
   if (WriteCentered) {
-    Column = (DC.getColumns() - TextSection.size()) / 2;
+    // FIXME breaks in case textsection is greater than available columns
+    Column = (DC.getColumns() - TextSection.size() * Factor) / 2;
   }
-  DC.write(TextSection.c_str(), Line, Column, /*Wrap=*/false);
+  DC.write(TextSection.c_str(), Line, Column, /*Wrap=*/false, WriteLarge);
 
-  Column += Count;
+  Column += Count * Factor;
+
+  if (WriteLarge) {
+    Line++;
+  }
+
   WriteCentered = false;
+  WriteLarge = false;
 }
 
 } // namespace netdisp

@@ -12,6 +12,7 @@ idf_component_register(
     "src/TextView.cpp"
     "src/ViewController.cpp"
     "src/netdisp.cpp"
+    "src/ExtraFonts.c"
   INCLUDE_DIRS
     "include"
 )

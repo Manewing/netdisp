@@ -38,6 +38,7 @@ private:
   unsigned Column = 0;
   unsigned Line = 0;
   bool WriteCentered = false;
+  bool WriteLarge = false;
 };
 
 } // namespace netdisp

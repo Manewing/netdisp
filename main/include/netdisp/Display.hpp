@@ -20,7 +20,8 @@ public:
 
   virtual void clear() = 0;
   virtual void write(const std::string &Text, unsigned Line = 0,
-                     unsigned Column = 0, bool Wrap = false) = 0;
+                     unsigned Column = 0, bool Wrap = false,
+                     bool Large = false) = 0;
   virtual void drawBitmap(unsigned X, unsigned Y, unsigned Width,
                           unsigned Height, const uint8_t *Bitmap) = 0;
   virtual void flush() = 0;

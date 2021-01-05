@@ -7,8 +7,7 @@ if [ $# -ne 2 ]; then
   exit 1
 fi
 
-echo -n "Normal
-*Bold*
-_Italic_
+echo -n "Norm. *Bold* _Ital._
 ~Centered
+#Large
 " | nc -b -w 0 -u $1 $2

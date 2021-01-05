@@ -1,6 +1,7 @@
 #include <netdisp/LcdgfxDisplay.hpp>
 
 #include <cstring>
+#include <netdisp/ExtraFonts.h>
 namespace netdisp {
 
 namespace {
@@ -47,18 +48,29 @@ unsigned LcdgfxDisplayController::getLines() const {
 void LcdgfxDisplayController::clear() { Canvas.clear(); }
 
 void LcdgfxDisplayController::write(const std::string &Text, unsigned Line,
-                                    unsigned Column, bool Wrap) {
+                                    unsigned Column, bool Wrap, bool Large) {
   if (Column > getColumns() || Line > getLines() || Text.empty()) {
     return;
   }
 
   EFontStyle Efs = getEFontStyle(Style);
 
+  unsigned OffsetH = 0;
+  if (Large) {
+    OffsetH = 5;
+    Canvas.setFixedFont(ssd1306_font16x22);
+  }
+
   if (Wrap) {
-    Canvas.printFixed(Column * FontW, Line * FontH, Text.c_str(), Efs);
+    Canvas.printFixed(Column * FontW, Line * FontH + OffsetH, Text.c_str(),
+                      Efs);
   } else {
-    Canvas.printFixed(Column * FontW, Line * FontH,
+    Canvas.printFixed(Column * FontW, Line * FontH + OffsetH,
                       Text.substr(0, getColumns()).c_str(), Efs);
+  }
+
+  if (Large) {
+    Canvas.setFixedFont(ssd1306xled_font8x16);
   }
 }
 
