@@ -1,9 +1,11 @@
+#include <netdisp/CanvasView.hpp>
 #include <netdisp/Config.hpp>
 #include <netdisp/Icons.hpp>
 #include <netdisp/Led.hpp>
 #include <netdisp/Parser.hpp>
 #include <netdisp/RotEnc.hpp>
-#include <netdisp/View.hpp>
+#include <netdisp/TextView.hpp>
+#include <netdisp/ViewController.hpp>
 #include <network/UdpReceiver.hpp>
 #include <network/WifiConnector.hpp>
 

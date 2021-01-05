@@ -1,6 +1,9 @@
+#include <netdisp/CanvasView.hpp>
 #include <netdisp/Command.hpp>
 #include <netdisp/Led.hpp>
+#include <netdisp/TextView.hpp>
 #include <netdisp/View.hpp>
+#include <netdisp/ViewController.hpp>
 
 #include <esp_log.h>
 #include <freertos/FreeRTOS.h>
