@@ -1,4 +1,5 @@
 #include <netdisp/Config.hpp>
+#include <netdisp/Icons.hpp>
 #include <netdisp/Led.hpp>
 #include <netdisp/Parser.hpp>
 #include <netdisp/RotEnc.hpp>
@@ -19,32 +20,41 @@
 
 namespace netdisp {
 
+std::shared_ptr<View> getLoadingView() {
+  // FIXME hardcoded display size
+  return std::make_shared<BitmapView>(32, 0, 64, 64, netdisp_bitmap_data,
+                                      sizeof(netdisp_bitmap_data));
+}
+
+std::shared_ptr<View> getReadyView(std::string const &IpStr,
+                                   std::string const &PortStr) {
+  return std::make_shared<TextView>("~*Ready*\n\n~" + IpStr + "\n~" + PortStr);
+}
+
 void main() {
   LcdgfxDisplayController DispCtrl;
-
   netdisp::LedController LedCtrl({NETDISP_LED_0_PIN, NETDISP_LED_1_PIN});
-  LedCtrl.setLeds(true);
+  netdisp::RotEncController RotEnc(NETDISP_ROTENC_PIN_A, NETDISP_ROTENC_PIN_B);
+  netdisp::ViewController ViewCtrl(getLoadingView(), NETDISP_VIEW_COUNT);
+  netdisp::Context Ctx{LedCtrl, ViewCtrl};
 
+  // Show loading view
+  LedCtrl.setLeds(true);
+  ViewCtrl.show(DispCtrl);
+
+  // Setup Wifi connection
   auto &WifiConn = network::WifiConnector::getInstance();
   if (!WifiConn.connect(NETDISP_WIFI_SSID, NETDISP_WIFI_PASSWORD,
                         NETDISP_WIFI_MAX_RETRY)) {
     return;
   }
 
+  // Initialize UDP receiver
   network::AsyncUdpReceiver AsyncRecv(NETDISP_PORT, NETDISP_MAX_MSG_LEN);
   if (!AsyncRecv.isReady()) {
     ESP_LOGE("NetDisp", "Could not setup async receiver");
     return;
   }
-
-  auto DefaultView = std::make_shared<TextView>(
-      "~*Ready*\n\n~" + WifiConn.getIpAddrStr() + "\n~" NETDISP_PORT_STR);
-  netdisp::ViewController ViewCtrl(DefaultView, NETDISP_VIEW_COUNT);
-
-  LedCtrl.setLeds(false);
-
-  netdisp::Context Ctx{LedCtrl, ViewCtrl};
-
   AsyncRecv.onRecv([&Ctx](uint8_t *Buffer, int Count) {
     if (Count < 0) {
       ESP_LOGE("NetDisp", "Failed to receive data");
@@ -62,7 +72,11 @@ void main() {
     }
   });
 
-  netdisp::RotEncController RotEnc(NETDISP_ROTENC_PIN_A, NETDISP_ROTENC_PIN_B);
+  // Switch to ready view
+  LedCtrl.setLeds(false);
+  ViewCtrl.setDefaultView(
+      getReadyView(WifiConn.getIpAddrStr(), NETDISP_PORT_STR));
+  ViewCtrl.show(DispCtrl);
 
   int LastPosition = 0;
   while (1) {
