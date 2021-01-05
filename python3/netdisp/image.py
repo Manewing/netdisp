@@ -21,10 +21,10 @@ class Bitmap(object):
 
         img = get_scaled_black_white(path, max_w, max_h)
         self._w, self._h = img.size
-        for y in range(int(self._h/8)):
+        for y in range(int(self._h / 8)):
             for x in range(self._w):
                 for l in range(8):
-                    self.addBit(img.getpixel((x, y*8 + l)) == 255)
+                    self.addBit(img.getpixel((x, y * 8 + l)) == 255)
 
     @property
     def data(self) -> bytes:
@@ -32,11 +32,11 @@ class Bitmap(object):
 
     @property
     def w(self) -> int:
-      return self._w
+        return self._w
 
     @property
     def h(self) -> int:
-      return self._h
+        return self._h
 
     def addBit(self, bit: bool):
         self._last_byte |= bit << self._bits
