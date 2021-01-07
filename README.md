@@ -58,6 +58,11 @@ idf.py build
 
 ### Python
 
+Install the requirements:
+```bash
+pip install -r requirements.txt
+```
+
 Running build will also copy the python files to the build directory, these
 can be dynamically added to the environment by running:
 ```bash
