@@ -5,6 +5,7 @@ function(pyfile NAME)
     DEPENDS
     ${CMAKE_CURRENT_SOURCE_DIR}/${NAME}.py
     COMMAND
+    mkdir -p ${PYTHON_OUT_DIR} &&
     cp -a ${CMAKE_CURRENT_SOURCE_DIR}/${NAME}.py
           ${PYTHON_OUT_DIR}/${NAME}.py
   )
