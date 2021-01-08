@@ -66,6 +66,15 @@ cd netdisp/
 idf.py build
 ```
 
+To build and run tests run:
+```bash
+mkdir build_test
+cd build_test
+cmake ../test
+make
+ctest
+```
+
 ### Python
 
 Install the requirements:
