@@ -1,0 +1,19 @@
+os:
+  - linux
+
+language: cpp
+
+install: skip
+
+jobs:
+  include:
+    - stage: Build for ESP32
+      script:
+        - ./.travis/prepare_esp_env.sh
+        - . ~/esp/esp-idf/export.sh
+        - idf.py build
+      cache:
+        directories:
+          - /home/travis/esp
+          - /home/travis/.espressif
+
