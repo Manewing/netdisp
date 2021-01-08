@@ -6,30 +6,8 @@
 
 namespace netdisp {
 
-ByteStream::ByteStream(uint8_t *Data, std::size_t Length)
-    : Data(Data), Length(Length), Pos(0) {}
-
-bool ByteStream::hasData(std::size_t Count) const {
-  return Length >= (Pos + Count);
-}
-
-bool ByteStream::eof() const { return Pos >= Length; }
-
-std::size_t ByteStream::seek(std::size_t To) {
-  Pos = std::min(Length, To);
-  return Pos;
-}
-
-bool ByteStream::getData(void *Dest, std::size_t Count) {
-  if (!hasData(Count)) {
-    return false;
-  }
-  std::memcpy(Dest, Data + Pos, Count);
-  Pos += Count;
-  return true;
-}
-
-Parser::Parser(uint8_t *Data, std::size_t Length) : ByteStream(Data, Length) {}
+Parser::Parser(const uint8_t *Data, std::size_t Length)
+    : ByteStream(Data, Length) {}
 
 std::unique_ptr<Command> Parser::parse() {
   uint16_t Magic = 0;
@@ -42,9 +20,8 @@ std::unique_ptr<Command> Parser::parse() {
     // No magic, treat data as text
     // TODO sanatize? max length?
     seek(0);
-    const char *Buffer = reinterpret_cast<const char *>(getData());
     std::string Text;
-    Text.assign(Buffer, getLength());
+    get(Text, getLength());
     return std::unique_ptr<Command>(
         new ShowTextCmd(std::move(Text), false, false));
   }
@@ -101,18 +78,10 @@ std::unique_ptr<Command> Parser::parseNextCommand() {
   }
   case 0x03: {
     uint8_t Raw = false, Length = 0;
-    if (!get(Raw, Length)) {
+    std::string Text;
+    if (!get(Raw, Length) || !get(Text, Length)) {
       return nullptr;
     }
-
-    // Assign text from buffer plus current position and given length
-    const char *Buffer = reinterpret_cast<const char *>(getData() + getPos());
-    std::string Text;
-    Text.assign(Buffer, Length);
-
-    // Consume the memory
-    seek(getPos() +  Length);
-
     return std::unique_ptr<Command>(new ShowTextCmd(std::move(Text), Raw));
   }
   case 0x04: {

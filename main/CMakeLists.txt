@@ -1,9 +1,11 @@
 idf_component_register(
   SRCS
+    "src/ByteStream.cpp"
     "src/CanvasView.cpp"
     "src/Command.cpp"
     "src/CompositeView.cpp"
     "src/Display.cpp"
+    "src/ExtraFonts.c"
     "src/LcdgfxDisplay.cpp"
     "src/Led.cpp"
     "src/Notification.cpp"
@@ -12,7 +14,6 @@ idf_component_register(
     "src/TextView.cpp"
     "src/ViewController.cpp"
     "src/netdisp.cpp"
-    "src/ExtraFonts.c"
   INCLUDE_DIRS
     "include"
 )
