@@ -26,7 +26,7 @@ public:
 
 private:
   DisplaySSD1306_128x64_I2C Display;
-  std::unique_ptr<uint8_t> CanvasData;
+  std::unique_ptr<uint8_t[]> CanvasData;
   NanoCanvas1 Canvas;
 };
 

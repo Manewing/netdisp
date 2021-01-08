@@ -23,7 +23,7 @@ void task(void *Arg) {
 
   // Allocate memory to buffer received message
   const unsigned MaxMsgLen = AsyncRecv.getMaxMsgLen();
-  std::unique_ptr<uint8_t> Buffer(new uint8_t[MaxMsgLen]);
+  std::unique_ptr<uint8_t[]> Buffer(new uint8_t[MaxMsgLen]);
 
   while (true) {
     std::memset(Buffer.get(), 0, MaxMsgLen);

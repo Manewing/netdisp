@@ -22,7 +22,7 @@ private:
   unsigned Y;
   unsigned Width;
   unsigned Height;
-  std::unique_ptr<uint8_t> BitmapData;
+  std::unique_ptr<uint8_t[]> BitmapData;
 };
 
 // TODO rect, line, circle
