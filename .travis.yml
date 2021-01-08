@@ -3,6 +3,8 @@ os:
 
 language: cpp
 
+compiler: gcc
+
 install: skip
 
 jobs:
@@ -12,8 +14,9 @@ jobs:
         - ./.travis/prepare_esp_env.sh
         - . ~/esp/esp-idf/export.sh
         - idf.py build
+        - ./.travis/build_tests.sh
+        - ./.travis/run_tests.sh
       cache:
         directories:
           - /home/travis/esp
           - /home/travis/.espressif
-
