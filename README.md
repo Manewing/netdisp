@@ -1,6 +1,7 @@
 # NetDisp
 
 [![Build Status](https://travis-ci.com/Manewing/netdisp.svg?branch=master)](https://travis-ci.com/github/Manewing/netdisp)
+[![License](https://img.shields.io/badge/license-GPLv3-blue)](./LICENSE)
 
 * [Introduction](#introduction)
 * [Building](#building)
