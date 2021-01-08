@@ -8,6 +8,12 @@ include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 
 set(EXTRA_COMPONENT_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/components)
 
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_FLAGS
+  "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror -O3"
+)
+
 set(
   PYTHON_OUT_DIR
   ${CMAKE_BINARY_DIR}/lib/python3/dist-packages/netdisp
