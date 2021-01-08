@@ -12,6 +12,10 @@ fi
 pushd "$ESP_IDF_DIR"
 git checkout v4.2
 git submodule update --init --recursive
+git checkout .
+
+# Workaround see https://github.com/espressif/esp-idf/issues/6262
+echo 'python-socketio<5; python_version<="2.7"' >> requirements.txt
 popd
 
 # Run the install script for ESP IDF, nop if everything is already installed
