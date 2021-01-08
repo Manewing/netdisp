@@ -7,7 +7,7 @@ install: skip
 
 jobs:
   include:
-    - stage: Build for ESP32
+    - stage: Build NetDisp for ESP32
       script:
         - ./.travis/prepare_esp_env.sh
         - . ~/esp/esp-idf/export.sh

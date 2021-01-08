@@ -40,9 +40,17 @@ netdisp.show_image(0, 0, 128, 64, "/path/to/image").send()
 # Building
 
 ## Software
-This project uses [ESP-IDF](https://github.com/espressif/esp-idf) as
+This project uses [ESP-IDF](https://github.com/espressif/esp-idf) v4.2 as
 the development framework, to build the project it is required to have
 ESP-IDF installed.
+
+Install ESP-IDF:
+```bash
+git clone --recursive https://github.com/espressif/esp-idf
+cd esp-idf
+git checkout v4.2
+git submodule update --init --recursive
+```
 
 Clone the project:
 ```bash
