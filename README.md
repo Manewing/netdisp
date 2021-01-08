@@ -1,5 +1,7 @@
 # NetDisp
 
+[![Build Status](https://travis-ci.com/Manewing/netdisp.svg?branch=master)](https://travis-ci.com/github/Manewing/netdisp)
+
 * [Introduction](#introduction)
 * [Building](#building)
 * [Examples](#examples)
