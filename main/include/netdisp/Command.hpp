@@ -2,28 +2,14 @@
 #define NETDISP_COMMAND_HPP
 
 #include <memory>
-#include <netdisp/Context.hpp>
+#include <netdisp/CommandBase.hpp>
 
 namespace netdisp {
 class View;
-}
+class Context;
+} // namespace netdisp
 
 namespace netdisp {
-
-class Command {
-public:
-  virtual ~Command() = default;
-
-  Command *setNext(std::unique_ptr<Command> Next);
-
-  void execute(Context &Ctx) const;
-
-protected:
-  virtual void executeInternal(Context &Ctx) const = 0;
-
-private:
-  std::unique_ptr<Command> NextCmd = nullptr;
-};
 
 class SelectViewCmd : public Command {
 public:
