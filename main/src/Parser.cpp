@@ -2,12 +2,11 @@
 
 #include <cstring>
 
-#include <esp_log.h>
-
 namespace netdisp {
 
-Parser::Parser(const uint8_t *Data, std::size_t Length)
-    : ByteStream(Data, Length) {}
+Parser::Parser(const uint8_t *Data, std::size_t Length,
+               const CommandBuilder &CB)
+    : ByteStream(Data, Length), CB(CB) {}
 
 std::unique_ptr<Command> Parser::parse() {
   uint16_t Magic = 0;
@@ -22,8 +21,7 @@ std::unique_ptr<Command> Parser::parse() {
     seek(0);
     std::string Text;
     get(Text, getLength());
-    return std::unique_ptr<Command>(
-        new ShowTextCmd(std::move(Text), false, false));
+    return CB.createShowTextCmd(std::move(Text), false, false);
   }
 
   std::unique_ptr<Command> FirstCmd = parseNextCommand();
@@ -58,14 +56,14 @@ std::unique_ptr<Command> Parser::parseNextCommand() {
     if (!get(Idx)) {
       return nullptr;
     }
-    return std::unique_ptr<Command>(new SelectViewCmd(Idx));
+    return CB.createSelectViewCmd(Idx);
   }
   case 0x01: {
     uint8_t Idx = 0;
     if (!get(Idx)) {
       return nullptr;
     }
-    return std::unique_ptr<Command>(new ShowViewCmd(Idx));
+    return CB.createShowViewCmd(Idx);
   }
   case 0x02: {
     uint8_t LedInfo = 0;
@@ -74,7 +72,7 @@ std::unique_ptr<Command> Parser::parseNextCommand() {
     }
     unsigned Led = (LedInfo >> 1) & 0xff;
     bool State = LedInfo & 0x1;
-    return std::unique_ptr<Command>(new SetLedCmd(Led, State));
+    return CB.createSetLedCmd(Led, State);
   }
   case 0x03: {
     uint8_t Raw = false, Length = 0;
@@ -82,14 +80,14 @@ std::unique_ptr<Command> Parser::parseNextCommand() {
     if (!get(Raw, Length) || !get(Text, Length)) {
       return nullptr;
     }
-    return std::unique_ptr<Command>(new ShowTextCmd(std::move(Text), Raw));
+    return CB.createShowTextCmd(std::move(Text), Raw);
   }
   case 0x04: {
     uint8_t Led = 0, Times = 0;
     if (!get(Led, Times)) {
       return nullptr;
     }
-    return std::unique_ptr<Command>(new BlinkLedCmd(Led, Times));
+    return CB.createBlinkLedCmd(Led, Times);
   }
   case 0x5: {
     uint16_t X = 0, Y = 0, Width = 0, Height = 0, Length = 0;
@@ -99,16 +97,16 @@ std::unique_ptr<Command> Parser::parseNextCommand() {
     if (!hasData(Length)) {
       return nullptr;
     }
-    auto Cmd = std::unique_ptr<Command>(
-        new ShowBitmapCmd(X, Y, Width, Height, getData() + getPos(), Length));
+    auto Cmd = CB.createShowBitmapCmd(X, Y, Width, Height, getData() + getPos(),
+                                      Length);
     seek(getPos() + Length);
     return Cmd;
   }
   case 0x6: {
-    return std::unique_ptr<Command>(new CreateCompositeViewCmd());
+    return CB.createCompViewCmd();
   }
   case 0x8: {
-    return std::unique_ptr<Command>(new EndViewCmd());
+    return CB.createEndViewCmd();
   }
 
   default:

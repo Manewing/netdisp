@@ -3,6 +3,7 @@ idf_component_register(
     "src/ByteStream.cpp"
     "src/CanvasView.cpp"
     "src/Command.cpp"
+    "src/CommandBuilder.cpp"
     "src/CompositeView.cpp"
     "src/Display.cpp"
     "src/ExtraFonts.c"

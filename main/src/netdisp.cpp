@@ -64,7 +64,7 @@ void main() {
     }
     ESP_LOGI("NetDisp", "Got message of length %u", Count);
 
-    netdisp::Parser Parser(Buffer, Count);
+    netdisp::Parser Parser(Buffer, Count, DefaultCommandBuilder());
     if (auto Cmd = Parser.parse()) {
       Ctx.lock();
       Cmd->execute(Ctx);
