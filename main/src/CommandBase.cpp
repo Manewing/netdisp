@@ -2,7 +2,7 @@
 
 namespace netdisp {
 
-Command *Command::setNext(std::unique_ptr<Command> Next) {
+Command *Command::setNext(std::shared_ptr<Command> Next) {
   NextCmd = std::move(Next);
   return NextCmd.get();
 }

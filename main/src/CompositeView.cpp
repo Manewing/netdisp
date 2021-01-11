@@ -12,4 +12,4 @@ void CompositeView::show(DisplayController &DC) {
   }
 }
 
-}
+} // namespace netdisp

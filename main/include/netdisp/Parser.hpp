@@ -8,13 +8,16 @@
 namespace netdisp {
 class Parser : protected ByteStream {
 public:
+  static const uint16_t Magic;
+
+public:
   Parser(const uint8_t *Data, std::size_t Length,
          const CommandBuilder &CB);
 
-  std::unique_ptr<Command> parse();
+  std::shared_ptr<Command> parse();
 
 private:
-  std::unique_ptr<Command> parseNextCommand();
+  std::shared_ptr<Command> parseNextCommand();
 
 private:
   const CommandBuilder &CB;

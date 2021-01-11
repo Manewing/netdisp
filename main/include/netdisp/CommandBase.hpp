@@ -13,7 +13,7 @@ class Command {
 public:
   virtual ~Command() = default;
 
-  Command *setNext(std::unique_ptr<Command> Next);
+  Command *setNext(std::shared_ptr<Command> Next);
 
   void execute(Context &Ctx) const;
 
@@ -21,7 +21,7 @@ protected:
   virtual void executeInternal(Context &Ctx) const = 0;
 
 private:
-  std::unique_ptr<Command> NextCmd = nullptr;
+  std::shared_ptr<Command> NextCmd = nullptr;
 };
 
 } // namespace netdisp

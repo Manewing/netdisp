@@ -1,30 +1,34 @@
+#include <algorithm>
 #include <netdisp/Parser.hpp>
 
 #include <cstring>
 
 namespace netdisp {
 
+const uint16_t Parser::Magic = 0xfaef;
+
 Parser::Parser(const uint8_t *Data, std::size_t Length,
                const CommandBuilder &CB)
     : ByteStream(Data, Length), CB(CB) {}
 
-std::unique_ptr<Command> Parser::parse() {
-  uint16_t Magic = 0;
-  if (!get(Magic)) {
+std::shared_ptr<Command> Parser::parse() {
+  uint16_t MagicVal = 0;
+  if (!get(MagicVal)) {
     return nullptr;
   }
 
-  // FIXME byte order issue
-  if (Magic != 0xfaef) {
-    // No magic, treat data as text
+  // If we have no magic, treat data as text
+  if (MagicVal != Magic) {
     // TODO sanatize? max length?
     seek(0);
     std::string Text;
     get(Text, getLength());
+    std::replace_if(Text.begin(), Text.end(),
+                    [](char C) { return !std::isprint(C) && C != '\n'; }, ' ');
     return CB.createShowTextCmd(std::move(Text), false, false);
   }
 
-  std::unique_ptr<Command> FirstCmd = parseNextCommand();
+  std::shared_ptr<Command> FirstCmd = parseNextCommand();
   if (!FirstCmd) {
     // TODO dump message content
     return nullptr;
@@ -32,19 +36,19 @@ std::unique_ptr<Command> Parser::parse() {
   Command *LastCmd = FirstCmd.get();
 
   while (!eof()) {
-    std::unique_ptr<Command> NextCmd = parseNextCommand();
+    std::shared_ptr<Command> NextCmd = parseNextCommand();
     if (!NextCmd) {
       // TODO dump message content
       return nullptr;
     }
 
-    LastCmd = LastCmd->setNext(std::move(NextCmd));
+    LastCmd = LastCmd->setNext(NextCmd);
   }
 
   return FirstCmd;
 }
 
-std::unique_ptr<Command> Parser::parseNextCommand() {
+std::shared_ptr<Command> Parser::parseNextCommand() {
   uint8_t CmdId;
   if (!get(CmdId)) {
     return nullptr;

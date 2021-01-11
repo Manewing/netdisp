@@ -8,6 +8,7 @@
 #include <netdisp/ViewController.hpp>
 #include <network/UdpReceiver.hpp>
 #include <network/WifiConnector.hpp>
+#include <netdisp/Context.hpp>
 
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>

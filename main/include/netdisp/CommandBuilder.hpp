@@ -7,39 +7,39 @@ namespace netdisp {
 
 class CommandBuilder {
 public:
-  virtual std::unique_ptr<Command> createSelectViewCmd(unsigned Idx) const = 0;
-  virtual std::unique_ptr<Command> createShowViewCmd(unsigned Idx) const = 0;
-  virtual std::unique_ptr<Command> createSetLedCmd(unsigned Led,
+  virtual std::shared_ptr<Command> createSelectViewCmd(unsigned Idx) const = 0;
+  virtual std::shared_ptr<Command> createShowViewCmd(unsigned Idx) const = 0;
+  virtual std::shared_ptr<Command> createSetLedCmd(unsigned Led,
                                                    bool State) const = 0;
-  virtual std::unique_ptr<Command> createBlinkLedCmd(unsigned Led,
+  virtual std::shared_ptr<Command> createBlinkLedCmd(unsigned Led,
                                                      unsigned Times) const = 0;
-  virtual std::unique_ptr<Command>
+  virtual std::shared_ptr<Command>
   createShowTextCmd(std::string Text, bool Raw,
                     bool UseCurrentView = true) const = 0;
-  virtual std::unique_ptr<Command>
+  virtual std::shared_ptr<Command>
   createShowBitmapCmd(unsigned X, unsigned Y, unsigned Width, unsigned Height,
                       const uint8_t *Data, unsigned Length) const = 0;
-  virtual std::unique_ptr<Command> createCompViewCmd() const = 0;
-  virtual std::unique_ptr<Command> createEndViewCmd() const = 0;
+  virtual std::shared_ptr<Command> createCompViewCmd() const = 0;
+  virtual std::shared_ptr<Command> createEndViewCmd() const = 0;
 };
 
 class DefaultCommandBuilder : public CommandBuilder {
 public:
-  std::unique_ptr<Command> createSelectViewCmd(unsigned Idx) const override;
-  std::unique_ptr<Command> createShowViewCmd(unsigned Idx) const override;
-  std::unique_ptr<Command> createSetLedCmd(unsigned Led,
+  std::shared_ptr<Command> createSelectViewCmd(unsigned Idx) const override;
+  std::shared_ptr<Command> createShowViewCmd(unsigned Idx) const override;
+  std::shared_ptr<Command> createSetLedCmd(unsigned Led,
                                            bool State) const override;
-  std::unique_ptr<Command> createBlinkLedCmd(unsigned Led,
+  std::shared_ptr<Command> createBlinkLedCmd(unsigned Led,
                                              unsigned Times) const override;
-  std::unique_ptr<Command>
+  std::shared_ptr<Command>
   createShowTextCmd(std::string Text, bool Raw,
                     bool UseCurrentView = true) const override;
-  std::unique_ptr<Command> createShowBitmapCmd(unsigned X, unsigned Y,
+  std::shared_ptr<Command> createShowBitmapCmd(unsigned X, unsigned Y,
                                                unsigned Width, unsigned Height,
                                                const uint8_t *Data,
                                                unsigned Length) const override;
-  std::unique_ptr<Command> createCompViewCmd() const override;
-  std::unique_ptr<Command> createEndViewCmd() const override;
+  std::shared_ptr<Command> createCompViewCmd() const override;
+  std::shared_ptr<Command> createEndViewCmd() const override;
 };
 
 } // namespace netdisp
