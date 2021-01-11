@@ -11,6 +11,7 @@ public:
 
   bool setLed(unsigned Led, bool State) const;
   bool setLeds(bool State) const;
+  bool blinkLed(unsigned Led, unsigned Times, unsigned DelayMs = 100) const;
 
 private:
   std::vector<int> LedPins;

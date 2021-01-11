@@ -2,6 +2,8 @@
 
 #include <driver/gpio.h>
 #include <esp_log.h>
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
 
 #define LOGGER_TAG "LedController"
 
@@ -36,6 +38,20 @@ bool LedController::setLeds(bool State) const {
     if (gpio_set_level(static_cast<gpio_num_t>(LedPin), State) != ESP_OK) {
       return false;
     }
+  }
+  return true;
+}
+
+bool LedController::blinkLed(unsigned Led, unsigned Times,
+                             unsigned DelayMs) const {
+  if (!setLed(Led, false)) {
+    return false;
+  }
+  for (unsigned Count = 0; Count < Times; Count++) {
+    setLed(Led, true);
+    vTaskDelay(DelayMs / portTICK_PERIOD_MS);
+    setLed(Led, false);
+    vTaskDelay(DelayMs / portTICK_PERIOD_MS);
   }
   return true;
 }
