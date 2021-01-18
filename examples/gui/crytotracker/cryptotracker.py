@@ -14,7 +14,8 @@ except ImportError as e:
 
 API_URL = 'https://api.coinbase.com/v2/prices'
 
-IMGS_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "..", "imgs")
+IMGS_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)),
+                         "..", "..", "..", "imgs")
 
 
 def get_icon(kind: str) -> str:
