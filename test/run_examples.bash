@@ -27,6 +27,11 @@ echo "# Hello World"
 "$EXAMPLES_DIR/hello_world/hello_world.bash" $IP $PORT
 sleep 2
 
+echo "# Blink LED"
+"$EXAMPLES_DIR/hello_world/blink_led.py" $IP $PORT 0 2
+"$EXAMPLES_DIR/hello_world/blink_led.py" $IP $PORT 1 2
+sleep 2
+
 echo "# Simple Format"
 "$EXAMPLES_DIR/formatting/simple_format.bash" $IP $PORT
 sleep 2

@@ -35,7 +35,7 @@ def get_latest_price(currency: str, crypto: str, kind: str = "sell") -> float:
 
 
 def parse_args(args):
-    parser = argparse.ArgumentParser(description="System Load Net-Monitor")
+    parser = argparse.ArgumentParser(description="NetDisp CryptoTracker")
     parser.add_argument('-v',
                         '--view',
                         type=int,

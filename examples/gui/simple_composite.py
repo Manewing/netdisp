@@ -15,7 +15,7 @@ except ImportError as e:
 
 
 def parse_args(args):
-    parser = argparse.ArgumentParser(description="System Load Net-Monitor")
+    parser = argparse.ArgumentParser(description="NetDisp Simple Composite View")
     parser.add_argument('-v',
                         '--view',
                         type=int,
@@ -30,7 +30,11 @@ def main(args):
     args = parse_args(args)
 
     netdisp = NetDisp(args.ip, args.port, args.view)
+
+    # Show selected view
     netdisp.show_view(args.view).send()
+
+    # Create a composite consisting of text and an image
     netdisp.create_composite().show_text("\n~*Hello*").show_image(
         56, 40, 16, 16, DROPLET_ICON_PATH).end_view().send()
 

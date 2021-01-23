@@ -36,7 +36,9 @@ class CommandBuilder(object):
             len(text)) + text[:0xff + 1].encode(encoding)
         return self
 
-    # TODO blink_led
+    def blink_led(self, led: int, times: int):
+        self._bytes += uint8(0x04) + uint8(led) + uint8(times)
+        return self
 
     def show_bitmap(self, x: int, y: int, w: int, h: int, bitmap_data: bytes):
         self._bytes += (uint8(0x05) + uint16(x) + uint16(y) + uint16(w) +
