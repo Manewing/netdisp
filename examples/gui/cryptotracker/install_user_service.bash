@@ -25,8 +25,8 @@ mkdir -p $CONF_PATH
 CRYPTOTRACKER_SCRIPT="$PWD/cryptotracker.py"
 
 echo "testing..."
-EXEC_START="/usr/bin/python3 $CRYPTOTRACKER_SCRIPT $1 $2 -v $3 $4 $5 -p 0.5"
-$EXEC_START --once -p 0.05
+EXEC_START="/usr/bin/python3 $CRYPTOTRACKER_SCRIPT $1 $2 -v $3 $4 $5 -p 30"
+$EXEC_START --once -p 0.5
 
 cat > $UNIT_DESC_PATH <<EOF
 [Unit]

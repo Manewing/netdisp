@@ -21,6 +21,14 @@ def parse_args(args):
                         help="View index to write to")
     parser.add_argument('ip', type=str, help="The IP of the netdisp")
     parser.add_argument('port', type=int, help="The port of the netdisp")
+    parser.add_argument("-p",
+                        "--period",
+                        type=float,
+                        default=1.0,
+                        help="Update period in seconds")
+    parser.add_argument("--once",
+                        action="store_true",
+                        help="If to not run continously but only once")
     return parser.parse_args(args)
 
 
@@ -39,7 +47,10 @@ def main(args):
         lines += []  # TODO disk
 
         netdisp.select_view(args.view).show_text('\n'.join(lines)).send()
-        time.sleep(1.0)
+        time.sleep(args.period)
+
+        if args.once:
+            break
 
 
 if __name__ == "__main__":

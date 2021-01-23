@@ -55,8 +55,8 @@ def parse_args(args):
     parser.add_argument("-p",
                         "--period",
                         type=float,
-                        default=10,
-                        help="Update period in minutes")
+                        default=30,
+                        help="Update period in seconds")
     parser.add_argument("--once",
                         action="store_true",
                         help="If to not run continously but only once")
@@ -79,7 +79,7 @@ def main(args):
         netdisp.end_view()
         netdisp.send()
 
-        time.sleep(args.period * 60)
+        time.sleep(args.period)
 
         if args.once:
             break
