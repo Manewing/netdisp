@@ -24,6 +24,9 @@ public:
                      bool Large = false) = 0;
   virtual void drawBitmap(unsigned X, unsigned Y, unsigned Width,
                           unsigned Height, const uint8_t *Bitmap) = 0;
+  virtual void drawLine(int X0, int Y0, int X1, int Y1) = 0;
+  virtual void drawRect(int X, int Y, unsigned W, unsigned H) = 0;
+  virtual void drawCircle(int X, int Y, unsigned Radius) = 0;
   virtual void flush() = 0;
 
 protected:

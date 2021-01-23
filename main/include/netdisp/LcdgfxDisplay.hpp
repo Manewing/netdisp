@@ -22,6 +22,9 @@ public:
              bool Wrap = false, bool Large = false) override;
   void drawBitmap(unsigned X, unsigned Y, unsigned Width, unsigned Height,
                   const uint8_t *Bitmap) override;
+  void drawLine(int X0, int Y0, int X1, int Y1) override;
+  void drawRect(int X, int Y, unsigned W, unsigned H) override;
+  void drawCircle(int X, int Y, unsigned Radius) override;
   void flush() override;
 
 private:

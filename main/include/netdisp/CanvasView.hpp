@@ -25,6 +25,45 @@ private:
   std::unique_ptr<uint8_t[]> BitmapData;
 };
 
+class LineView : public View {
+public:
+  LineView(int X0, int Y0, int X1, int Y1);
+
+  void show(DisplayController &DC) override;
+
+private:
+  int X0 = 0;
+  int Y0 = 0;
+  int X1 = 0;
+  int Y1 = 0;
+};
+
+class RectView : public View {
+public:
+  RectView(int X, int Y, unsigned W, unsigned H);
+
+  void show(DisplayController &DC) override;
+
+private:
+  int X = 0;
+  int Y = 0;
+  unsigned W = 0;
+  unsigned H = 0;
+};
+
+class CircleView : public View {
+public:
+  CircleView(int X, int Y, unsigned Radius);
+
+  void show(DisplayController &DC) override;
+
+private:
+  int X = 0;
+  int Y = 0;
+  unsigned Radius = 0;
+};
+
+
 // TODO rect, line, circle
 
 } // namespace netdisp

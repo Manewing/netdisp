@@ -41,7 +41,11 @@ echo "# System Monitor"
 sleep 2
 
 echo "# Show Image"
-"$EXAMPLES_DIR/bitmaps/show_image.py" $IP $PORT "$IMAGE_DIR/droplet_icon.png"
+"$EXAMPLES_DIR/canvas/show_image.py" $IP $PORT "$IMAGE_DIR/droplet_icon.png"
+sleep 2
+
+echo "# Draw"
+"$EXAMPLES_DIR/canvas/draw.py" $IP $PORT
 sleep 2
 
 echo "# Simple Composite"

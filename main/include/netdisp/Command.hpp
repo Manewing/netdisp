@@ -87,6 +87,39 @@ private:
   std::shared_ptr<View> BmpView;
 };
 
+class DrawLineCmd : public ViewCommand {
+public:
+  DrawLineCmd(int X0, int Y0, int X1, int Y1);
+
+protected:
+  void executeInternal(Context &Ctx) const override;
+
+private:
+  std::shared_ptr<View> LnView;
+};
+
+class DrawRectCmd : public ViewCommand {
+public:
+  DrawRectCmd(int X, int Y, unsigned W, unsigned H);
+
+protected:
+  void executeInternal(Context &Ctx) const override;
+
+private:
+  std::shared_ptr<View> RctView;
+};
+
+class DrawCircleCmd : public ViewCommand {
+public:
+  DrawCircleCmd(int X, int Y, unsigned Radius);
+
+protected:
+  void executeInternal(Context &Ctx) const override;
+
+private:
+  std::shared_ptr<View> CrclView;
+};
+
 class CreateCompositeViewCmd : public ViewCommand {
 public:
   CreateCompositeViewCmd();

@@ -9,6 +9,16 @@ def uint8(x) -> bytes:
     return bytes([x & 0xff])
 
 
+def int16(x) -> bytes:
+    return struct.pack("<h", x)
+
+def int16_arr(arr) -> bytes:
+    result = bytes()
+    for x in arr:
+      result += int16(x)
+    return result
+
+
 def uint16(x) -> bytes:
     return struct.pack("<H", x)
 
@@ -43,6 +53,18 @@ class CommandBuilder(object):
     def show_bitmap(self, x: int, y: int, w: int, h: int, bitmap_data: bytes):
         self._bytes += (uint8(0x05) + uint16(x) + uint16(y) + uint16(w) +
                         uint16(h) + uint16(len(bitmap_data)) + bitmap_data)
+        return self
+
+    def draw_line(self, p_start: tuple, p_end: tuple):
+        self._bytes += uint8(0x9) + int16_arr(p_start + p_end)
+        return self
+
+    def draw_rect(self, point: tuple, width: int, height: int):
+        self._bytes += uint8(0xa) + int16_arr(point + (width, height))
+        return self
+
+    def draw_circle(self, point: tuple, radius: int):
+        self._bytes += uint8(0xb) + int16_arr(point + (radius,))
         return self
 
     def show_image(self, x: int, y: int, max_w: int, max_h: int, path: str):

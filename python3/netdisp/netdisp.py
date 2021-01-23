@@ -28,9 +28,11 @@ class NetDisp(object):
                 self._current_cmd.select_view(self._view)
         return self._current_cmd
 
-    def send(self) -> bool:
+    def send(self, reset: bool = True) -> bool:
         """
         Sends the current command to the NetDisp.
+
+        reset: If to reset the current command
 
         return: True if command was send successfully
         raises: ValueError if there is no current command
@@ -38,9 +40,10 @@ class NetDisp(object):
         if self._current_cmd is None:
             raise ValueError("No command to send")
         data = self._current_cmd.finish()
-        self._current_cmd = None
+        if reset:
+          self._current_cmd = None
         try:
-            return self._sender.send(data) > 0
+            return self._sender.send(data)
         except OSError as e:
             print(f"Failed to send commend: {e}", file=sys.stderr)
             return False

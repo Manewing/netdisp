@@ -93,7 +93,7 @@ std::shared_ptr<Command> Parser::parseNextCommand() {
     }
     return CB.createBlinkLedCmd(Led, Times);
   }
-  case 0x5: {
+  case 0x05: {
     uint16_t X = 0, Y = 0, Width = 0, Height = 0, Length = 0;
     if (!get(X, Y, Width, Height, Length)) {
       return nullptr;
@@ -106,18 +106,41 @@ std::shared_ptr<Command> Parser::parseNextCommand() {
     seek(getPos() + Length);
     return Cmd;
   }
-  case 0x6: {
+  case 0x06: {
     return CB.createCompViewCmd();
   }
-  case 0x7: {
+  case 0x07: {
     uint16_t TimeoutMs = 0;
     if (!get(TimeoutMs)) {
       return nullptr;
     }
     return CB.createNotificationCmd(TimeoutMs);
   }
-  case 0x8: {
+  case 0x08: {
     return CB.createEndViewCmd();
+  }
+  case 0x09: {
+    int16_t X0 = 0, Y0 = 0, X1 = 0, Y1 = 0;
+    if (!get(X0, Y0, X1, Y1)) {
+      return nullptr;
+    }
+    return CB.createDrawLineCmd(X0, Y0, X1, Y1);
+  }
+  case 0x0a: {
+    int16_t X = 0, Y = 0;
+    uint16_t W = 0, H = 0;
+    if (!get(X, Y, W, H)) {
+      return nullptr;
+    }
+    return CB.createDrawRectCmd(X, Y, W, H);
+  }
+  case 0x0b: {
+    int16_t X = 0, Y = 0;
+    uint16_t Radius = 0;
+    if (!get(X, Y, Radius)) {
+      return nullptr;
+    }
+    return CB.createDrawCircleCmd(X, Y, Radius);
   }
 
   default:

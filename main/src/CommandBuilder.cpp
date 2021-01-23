@@ -1,52 +1,94 @@
+#include <cassert>
 #include <netdisp/CommandBuilder.hpp>
 
 namespace netdisp {
 
 std::shared_ptr<Command>
 DefaultCommandBuilder::createSelectViewCmd(unsigned Idx) const {
-  return std::shared_ptr<Command>(new SelectViewCmd(Idx));
+  auto Ret = std::shared_ptr<Command>(new SelectViewCmd(Idx));
+  assert(Ret);
+  return Ret;
 }
 
 std::shared_ptr<Command>
 DefaultCommandBuilder::createShowViewCmd(unsigned Idx) const {
-  return std::shared_ptr<Command>(new ShowViewCmd(Idx));
+  auto Ret = std::shared_ptr<Command>(new ShowViewCmd(Idx));
+  assert(Ret);
+  return Ret;
 }
 
 std::shared_ptr<Command>
 DefaultCommandBuilder::createSetLedCmd(unsigned Led, bool State) const {
-  return std::shared_ptr<Command>(new SetLedCmd(Led, State));
+  auto Ret = std::shared_ptr<Command>(new SetLedCmd(Led, State));
+  assert(Ret);
+  return Ret;
 }
 
 std::shared_ptr<Command>
 DefaultCommandBuilder::createShowTextCmd(std::string Text, bool Raw,
                                          bool UseCurrentView) const {
-  return std::shared_ptr<Command>(
+  auto Ret = std::shared_ptr<Command>(
       new ShowTextCmd(std::move(Text), Raw, UseCurrentView));
+  assert(Ret);
+  return Ret;
 }
 
 std::shared_ptr<Command>
 DefaultCommandBuilder::createBlinkLedCmd(unsigned Led, unsigned Times) const {
-  return std::shared_ptr<Command>(new BlinkLedCmd(Led, Times));
+  auto Ret = std::shared_ptr<Command>(new BlinkLedCmd(Led, Times));
+  assert(Ret);
+  return Ret;
 }
 
 std::shared_ptr<Command> DefaultCommandBuilder::createShowBitmapCmd(
     unsigned X, unsigned Y, unsigned Width, unsigned Height,
     const uint8_t *Data, unsigned Length) const {
-  return std::shared_ptr<Command>(
+  auto Ret = std::shared_ptr<Command>(
       new ShowBitmapCmd(X, Y, Width, Height, Data, Length));
+  assert(Ret);
+  return Ret;
+}
+
+std::shared_ptr<Command>
+DefaultCommandBuilder::createDrawLineCmd(int X0, int Y0, int X1, int Y1) const {
+  auto Ret = std::shared_ptr<Command>(new DrawLineCmd(X0, Y0, X1, Y1));
+  assert(Ret);
+  return Ret;
+}
+
+std::shared_ptr<Command>
+DefaultCommandBuilder::createDrawRectCmd(int X, int Y, unsigned W,
+                                         unsigned H) const {
+  auto Ret = std::shared_ptr<Command>(new DrawRectCmd(X, Y, W, H));
+  assert(Ret);
+  return Ret;
+}
+
+std::shared_ptr<Command>
+DefaultCommandBuilder::createDrawCircleCmd(int X, int Y,
+                                           unsigned Radius) const {
+  auto Ret = std::shared_ptr<Command>(new DrawCircleCmd(X, Y, Radius));
+  assert(Ret);
+  return Ret;
 }
 
 std::shared_ptr<Command> DefaultCommandBuilder::createCompViewCmd() const {
-  return std::shared_ptr<Command>(new CreateCompositeViewCmd());
+  auto Ret = std::shared_ptr<Command>(new CreateCompositeViewCmd());
+  assert(Ret);
+  return Ret;
 }
 
 std::shared_ptr<Command>
 DefaultCommandBuilder::createNotificationCmd(unsigned TimeoutMs) const {
-  return std::shared_ptr<Command>(new CreateNotificationCmd(TimeoutMs));
+  auto Ret = std::shared_ptr<Command>(new CreateNotificationCmd(TimeoutMs));
+  assert(Ret);
+  return Ret;
 }
 
 std::shared_ptr<Command> DefaultCommandBuilder::createEndViewCmd() const {
-  return std::shared_ptr<Command>(new EndViewCmd());
+  auto Ret = std::shared_ptr<Command>(new EndViewCmd());
+  assert(Ret);
+  return Ret;
 }
 
 } // namespace netdisp

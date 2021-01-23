@@ -19,6 +19,13 @@ public:
   virtual std::shared_ptr<Command>
   createShowBitmapCmd(unsigned X, unsigned Y, unsigned Width, unsigned Height,
                       const uint8_t *Data, unsigned Length) const = 0;
+
+  virtual std::shared_ptr<Command> createDrawLineCmd(int X0, int Y0, int X1,
+                                                     int Y1) const = 0;
+  virtual std::shared_ptr<Command> createDrawRectCmd(int X, int Y, unsigned W,
+                                                     unsigned H) const = 0;
+  virtual std::shared_ptr<Command>
+  createDrawCircleCmd(int X, int Y, unsigned Radius) const = 0;
   virtual std::shared_ptr<Command> createCompViewCmd() const = 0;
   virtual std::shared_ptr<Command>
   createNotificationCmd(unsigned TimeoutMs) const = 0;
@@ -40,6 +47,12 @@ public:
                                                unsigned Width, unsigned Height,
                                                const uint8_t *Data,
                                                unsigned Length) const override;
+  std::shared_ptr<Command> createDrawLineCmd(int X0, int Y0, int X1,
+                                             int Y1) const override;
+  std::shared_ptr<Command> createDrawRectCmd(int X, int Y, unsigned W,
+                                             unsigned H) const override;
+  std::shared_ptr<Command> createDrawCircleCmd(int X, int Y,
+                                               unsigned Radius) const override;
   std::shared_ptr<Command> createCompViewCmd() const override;
   std::shared_ptr<Command>
   createNotificationCmd(unsigned TimeoutMs) const override;

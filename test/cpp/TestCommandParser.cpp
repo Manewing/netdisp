@@ -35,13 +35,18 @@ public:
               (unsigned X, unsigned Y, unsigned Width, unsigned Height,
                const uint8_t *Data, unsigned Length),
               (const override));
+  MOCK_METHOD(std::shared_ptr<netdisp::Command>, createDrawLineCmd,
+              (int X0, int Y0, int X1, int Y1), (const override));
+  MOCK_METHOD(std::shared_ptr<netdisp::Command>, createDrawRectCmd,
+              (int X, int Y, unsigned W, unsigned H), (const override));
+  MOCK_METHOD(std::shared_ptr<netdisp::Command>, createDrawCircleCmd,
+              (int X, int Y, unsigned Radius), (const override));
   MOCK_METHOD(std::shared_ptr<netdisp::Command>, createCompViewCmd, (),
               (const override));
   MOCK_METHOD(std::shared_ptr<netdisp::Command>, createNotificationCmd,
               (unsigned TimeoutMs), (const override));
   MOCK_METHOD(std::shared_ptr<netdisp::Command>, createEndViewCmd, (),
               (const override));
-
 };
 
 TEST(TestCommandParser, RawText) {
@@ -105,7 +110,8 @@ TEST(TestCommandParser, ViewsAndLeds) {
   {
     MockCmdBuilder MCB;
     EXPECT_CALL(MCB, createCompViewCmd()).WillOnce(Return(getDummyCmd()));
-    EXPECT_CALL(MCB, createNotificationCmd(500)).WillOnce(Return(getDummyCmd()));
+    EXPECT_CALL(MCB, createNotificationCmd(500))
+        .WillOnce(Return(getDummyCmd()));
     EXPECT_CALL(MCB, createEndViewCmd()).WillOnce(Return(getDummyCmd()));
 
     uint8_t CompViewCmd = 0x06;

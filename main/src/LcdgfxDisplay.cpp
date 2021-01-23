@@ -80,6 +80,20 @@ void LcdgfxDisplayController::drawBitmap(unsigned X, unsigned Y, unsigned Width,
   Canvas.drawBitmap1(X, Y, Width, Height, Bitmap);
 }
 
+void LcdgfxDisplayController::drawLine(int X0, int Y0, int X1, int Y1) {
+  Canvas.drawLine(NanoRect{NanoPoint{X0, Y0}, NanoPoint{X1, Y1}});
+}
+
+void LcdgfxDisplayController::drawRect(int X, int Y, unsigned W, unsigned H) {
+  Canvas.drawRect(
+      NanoRect{NanoPoint{X, Y},
+               NanoPoint{static_cast<int>(X + W), static_cast<int>(Y + H)}});
+}
+
+void LcdgfxDisplayController::drawCircle(int X, int Y, unsigned Radius) {
+  Canvas.drawCircle(X, Y, Radius);
+}
+
 void LcdgfxDisplayController::flush() { Display.drawCanvas(0, 0, Canvas); }
 
 } // namespace netdisp

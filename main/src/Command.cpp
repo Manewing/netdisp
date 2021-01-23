@@ -88,6 +88,30 @@ void ShowBitmapCmd::executeInternal(Context &Ctx) const {
   setView(Ctx, Ctx.ViewCtrl.getCurrentViewIdx(), BmpView);
 }
 
+DrawLineCmd::DrawLineCmd(int X0, int Y0, int X1, int Y1) {
+  LnView = std::make_shared<LineView>(X0, Y0, X1, Y1);
+}
+
+void DrawLineCmd::executeInternal(Context &Ctx) const {
+  setView(Ctx, Ctx.ViewCtrl.getCurrentViewIdx(), LnView);
+}
+
+DrawRectCmd::DrawRectCmd(int X, int Y, unsigned W, unsigned H) {
+  RctView = std::make_shared<RectView>(X, Y, W, H);
+}
+
+void DrawRectCmd::executeInternal(Context &Ctx) const {
+  setView(Ctx, Ctx.ViewCtrl.getCurrentViewIdx(), RctView);
+}
+
+DrawCircleCmd::DrawCircleCmd(int X, int Y, unsigned Radius) {
+  CrclView = std::make_shared<CircleView>(X, Y, Radius);
+}
+
+void DrawCircleCmd::executeInternal(Context &Ctx) const {
+  setView(Ctx, Ctx.ViewCtrl.getCurrentViewIdx(), CrclView);
+}
+
 CreateCompositeViewCmd::CreateCompositeViewCmd() {
   CompView = std::make_shared<CompositeView>();
 }
