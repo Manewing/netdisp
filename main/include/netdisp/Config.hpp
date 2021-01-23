@@ -67,4 +67,18 @@
 #define NETDISP_VIEW_COUNT CONFIG_NETDISP_VIEW_COUNT
 #endif
 
+#ifndef CONFIG_NETDISP_VIEW_TIMEOUT_MS
+#define NETDISP_VIEW_TIMEOUT_MS 60000U /* 60s */
+#else
+#define NETDISP_VIEW_TIMEOUT_MS                                                \
+  static_cast<unsigned>(CONFIG_NETDISP_VIEW_TIMEOUT_MS)
+#endif
+
+#ifndef CONFIG_NETDISP_NOTIFICATION_MAX_TIMEOUT_MS
+#define NETDISP_NOTIFICATION_MAX_TIMEOUT_MS 5000U /* 5s */
+#else
+#define NETDISP_NOTIFICATION_MAX_TIMEOUT_MS                                    \
+  static_cast<unsigned>(CONFIG_NETDISP_NOTIFICATION_MAX_TIMEOUT_MS)
+#endif
+
 #endif // #ifndef NETDISP_CONFIG_HPP

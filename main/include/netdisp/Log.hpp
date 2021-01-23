@@ -17,5 +17,4 @@
 
 #endif
 
-
 #endif // #ifndef NETDISP_LOG_HPP

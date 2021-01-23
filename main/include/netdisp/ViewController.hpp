@@ -12,6 +12,28 @@ class DisplayController;
 
 namespace netdisp {
 
+class ViewHandle {
+public:
+  ViewHandle() = default;
+  explicit ViewHandle(std::shared_ptr<View> Vw, unsigned TimeoutMs = 0);
+
+  bool hasTimedout() const;
+
+  View &operator*() { return *Vw; }
+
+  const View &operator*() const { return *Vw; }
+
+  View *operator->() { return Vw.get(); }
+
+  const View *operator->() const { return Vw.get(); }
+
+  const std::shared_ptr<View> &get() const { return Vw; }
+
+private:
+  unsigned TimeoutEndMs = 0;
+  std::shared_ptr<View> Vw = nullptr;
+};
+
 class ViewController {
 public:
   // use uint8_t instead of unsigned
@@ -26,7 +48,7 @@ public:
   bool setView(unsigned Idx, std::shared_ptr<View> V);
   // delete view
 
-  void setNotification(std::shared_ptr<Notification> N);
+  void setNotification(std::shared_ptr<View> N, unsigned TimeoutMs = 500);
   void clearNotification();
 
   bool selectCurrentViewIdx(unsigned Idx);
@@ -36,12 +58,12 @@ public:
   unsigned getShownViewIdx() const;
 
 private:
-  View &getViewToShow();
+  ViewHandle &getViewToShow();
 
 private:
-  std::shared_ptr<View> DefaultView;
-  std::shared_ptr<Notification> Notify;
-  std::vector<std::shared_ptr<View>> Views;
+  ViewHandle DefaultView;
+  ViewHandle Notification;
+  std::vector<ViewHandle> Views;
 
   unsigned CurrentViewIdx = 0;
   unsigned ShownViewIdx = 0;

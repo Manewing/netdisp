@@ -9,20 +9,9 @@ class DisplayController;
 
 namespace netdisp {
 
-// TODO refactor, take view to show as argument
-class Notification : public View {
+class IdxInfoView : public View {
 public:
-  Notification(unsigned TimeoutMs);
-
-  bool isTimedout() const;
-
-private:
-  unsigned TimeoutEndMs;
-};
-
-class IdxInfoView : public Notification {
-public:
-  IdxInfoView(unsigned Idx, unsigned TimeoutMs);
+  IdxInfoView(unsigned Idx);
 
   void show(DisplayController &DC) override;
 

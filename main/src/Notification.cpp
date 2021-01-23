@@ -1,19 +1,9 @@
-#include <freertos/FreeRTOS.h>
-#include <freertos/task.h>
 #include <netdisp/Display.hpp>
 #include <netdisp/Notification.hpp>
 
 namespace netdisp {
 
-Notification::Notification(unsigned TimeoutMs)
-    : TimeoutEndMs(xTaskGetTickCount() * portTICK_PERIOD_MS + TimeoutMs) {}
-
-bool Notification::isTimedout() const {
-  return TimeoutEndMs <= xTaskGetTickCount() * portTICK_PERIOD_MS;
-}
-
-IdxInfoView::IdxInfoView(unsigned Idx, unsigned TimeoutMs)
-    : Notification(TimeoutMs), Idx(Idx) {}
+IdxInfoView::IdxInfoView(unsigned Idx) : Idx(Idx) {}
 
 void IdxInfoView::show(DisplayController &DC) {
   auto IdxStr = std::to_string(Idx);

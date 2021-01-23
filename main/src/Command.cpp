@@ -1,12 +1,12 @@
 #include <netdisp/CanvasView.hpp>
 #include <netdisp/Command.hpp>
 #include <netdisp/CompositeView.hpp>
+#include <netdisp/Context.hpp>
 #include <netdisp/Led.hpp>
 #include <netdisp/Log.hpp>
 #include <netdisp/TextView.hpp>
 #include <netdisp/View.hpp>
 #include <netdisp/ViewController.hpp>
-#include <netdisp/Context.hpp>
 
 namespace netdisp {
 
@@ -32,7 +32,7 @@ SetLedCmd::SetLedCmd(unsigned Led, bool State) : Led(Led), State(State) {}
 
 void SetLedCmd::executeInternal(Context &Ctx) const {
   ND_LOGI("Command", "execute set LED[%d] to %s", Led,
-           (State ? "HIGH" : "LOW"));
+          (State ? "HIGH" : "LOW"));
 
   if (!Ctx.LedCtrl.setLed(Led, State)) {
     ND_LOGW("Command", "failed to set LED[%d]", Led);
@@ -62,7 +62,7 @@ void ViewCommand::setView(Context &Ctx, unsigned Idx,
 ShowTextCmd::ShowTextCmd(std::string Text, bool Raw, bool UCV)
     : UseCurrentView(UCV), TxtView() {
   ND_LOGI("Command", "prepare show text: %s, raw=%s", Text.c_str(),
-           (Raw ? "yes" : "no"));
+          (Raw ? "yes" : "no"));
   if (Raw) {
     TxtView = std::make_shared<RawTextView>(std::move(Text));
   } else {
@@ -79,8 +79,8 @@ ShowBitmapCmd::ShowBitmapCmd(unsigned X, unsigned Y, unsigned Width,
                              unsigned Height, const uint8_t *Data,
                              unsigned Length) {
   ND_LOGI("Command",
-           "prepare show bitmap X: %u, Y: %u W: %u, H: %u, Len %u bytes", X, Y,
-           Width, Height, Length);
+          "prepare show bitmap X: %u, Y: %u W: %u, H: %u, Len %u bytes", X, Y,
+          Width, Height, Length);
   BmpView = std::make_shared<BitmapView>(X, Y, Width, Height, Data, Length);
 }
 
@@ -94,7 +94,7 @@ CreateCompositeViewCmd::CreateCompositeViewCmd() {
 
 void CreateCompositeViewCmd::executeInternal(Context &Ctx) const {
   ND_LOGI("Command", "execute create composite, at stack %u",
-           Ctx.ParentViews.size());
+          Ctx.ParentViews.size());
   setView(Ctx, Ctx.ViewCtrl.getCurrentViewIdx(), CompView);
   Ctx.ParentViews.push(CompView);
 }

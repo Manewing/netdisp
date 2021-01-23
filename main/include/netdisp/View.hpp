@@ -10,6 +10,12 @@ namespace netdisp {
 
 class View {
 public:
+  View() = default;
+  View(const View &) = delete;
+  View &operator=(const View &) = delete;
+  View(View &&) = delete;
+  View &operator=(View &&) = delete;
+
   virtual void addView(std::shared_ptr<View> /*SubView*/) {}
   virtual void show(DisplayController &DC) = 0;
 };

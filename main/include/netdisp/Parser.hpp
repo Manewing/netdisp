@@ -11,8 +11,7 @@ public:
   static const uint16_t Magic;
 
 public:
-  Parser(const uint8_t *Data, std::size_t Length,
-         const CommandBuilder &CB);
+  Parser(const uint8_t *Data, std::size_t Length, const CommandBuilder &CB);
 
   std::shared_ptr<Command> parse();
 
