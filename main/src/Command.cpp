@@ -99,6 +99,17 @@ void CreateCompositeViewCmd::executeInternal(Context &Ctx) const {
   Ctx.ParentViews.push(CompView);
 }
 
+CreateNotificationCmd::CreateNotificationCmd(unsigned TMS) : TimeoutMs(TMS) {
+  Notification = std::make_shared<CompositeView>();
+}
+
+void CreateNotificationCmd::executeInternal(Context &Ctx) const {
+  ND_LOGI("Command", "execute create notification, at stack %u",
+          Ctx.ParentViews.size());
+  Ctx.ViewCtrl.setNotification(Notification, TimeoutMs);
+  Ctx.ParentViews.push(Notification);
+}
+
 void EndViewCmd::executeInternal(Context &Ctx) const {
   ND_LOGI("Command", "execute end view, stack %u", Ctx.ParentViews.size());
   if (Ctx.ParentViews.empty()) {

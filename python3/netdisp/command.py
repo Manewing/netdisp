@@ -54,6 +54,9 @@ class CommandBuilder(object):
         self._bytes += uint8(0x6)
         return self
 
+    def create_notification(self, timeout_ms: int = 500):
+        self._bytes += uint8(0x7) + uint16(timeout_ms)
+
     def end_view(self):
         self._bytes += uint8(0x8)
 

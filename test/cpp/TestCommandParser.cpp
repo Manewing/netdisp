@@ -37,8 +37,11 @@ public:
               (const override));
   MOCK_METHOD(std::shared_ptr<netdisp::Command>, createCompViewCmd, (),
               (const override));
+  MOCK_METHOD(std::shared_ptr<netdisp::Command>, createNotificationCmd,
+              (unsigned TimeoutMs), (const override));
   MOCK_METHOD(std::shared_ptr<netdisp::Command>, createEndViewCmd, (),
               (const override));
+
 };
 
 TEST(TestCommandParser, RawText) {
@@ -97,6 +100,21 @@ TEST(TestCommandParser, ViewsAndLeds) {
     uint8_t Cmd[] = {0x00, 0x00, 0x04, 0x03, 0x04};
     unittest::pack_elem(Cmd, netdisp::Parser::Magic);
     netdisp::Parser P(unittest::data(Cmd), sizeof(Cmd), MCB);
+    P.parse();
+  }
+  {
+    MockCmdBuilder MCB;
+    EXPECT_CALL(MCB, createCompViewCmd()).WillOnce(Return(getDummyCmd()));
+    EXPECT_CALL(MCB, createNotificationCmd(500)).WillOnce(Return(getDummyCmd()));
+    EXPECT_CALL(MCB, createEndViewCmd()).WillOnce(Return(getDummyCmd()));
+
+    uint8_t CompViewCmd = 0x06;
+    uint8_t NotifyCmd = 0x07;
+    uint8_t EndViewCmd = 0x08;
+    uint16_t TimeoutMs = 500;
+    auto Data = unittest::pack(netdisp::Parser::Magic, CompViewCmd, NotifyCmd,
+                               TimeoutMs, EndViewCmd);
+    netdisp::Parser P(Data.first.get(), Data.second, MCB);
     P.parse();
   }
 }

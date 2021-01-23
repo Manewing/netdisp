@@ -20,6 +20,8 @@ public:
   createShowBitmapCmd(unsigned X, unsigned Y, unsigned Width, unsigned Height,
                       const uint8_t *Data, unsigned Length) const = 0;
   virtual std::shared_ptr<Command> createCompViewCmd() const = 0;
+  virtual std::shared_ptr<Command>
+  createNotificationCmd(unsigned TimeoutMs) const = 0;
   virtual std::shared_ptr<Command> createEndViewCmd() const = 0;
 };
 
@@ -39,6 +41,8 @@ public:
                                                const uint8_t *Data,
                                                unsigned Length) const override;
   std::shared_ptr<Command> createCompViewCmd() const override;
+  std::shared_ptr<Command>
+  createNotificationCmd(unsigned TimeoutMs) const override;
   std::shared_ptr<Command> createEndViewCmd() const override;
 };
 

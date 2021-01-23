@@ -109,6 +109,13 @@ std::shared_ptr<Command> Parser::parseNextCommand() {
   case 0x6: {
     return CB.createCompViewCmd();
   }
+  case 0x7: {
+    uint16_t TimeoutMs = 0;
+    if (!get(TimeoutMs)) {
+      return nullptr;
+    }
+    return CB.createNotificationCmd(TimeoutMs);
+  }
   case 0x8: {
     return CB.createEndViewCmd();
   }

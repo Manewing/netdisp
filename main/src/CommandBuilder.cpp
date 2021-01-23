@@ -40,6 +40,11 @@ std::shared_ptr<Command> DefaultCommandBuilder::createCompViewCmd() const {
   return std::shared_ptr<Command>(new CreateCompositeViewCmd());
 }
 
+std::shared_ptr<Command>
+DefaultCommandBuilder::createNotificationCmd(unsigned TimeoutMs) const {
+  return std::shared_ptr<Command>(new CreateNotificationCmd(TimeoutMs));
+}
+
 std::shared_ptr<Command> DefaultCommandBuilder::createEndViewCmd() const {
   return std::shared_ptr<Command>(new EndViewCmd());
 }

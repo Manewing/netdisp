@@ -98,6 +98,18 @@ protected:
   std::shared_ptr<View> CompView;
 };
 
+class CreateNotificationCmd : public ViewCommand {
+public:
+  CreateNotificationCmd(unsigned TimeoutMs);
+
+protected:
+  void executeInternal(Context &Ctx) const override;
+
+protected:
+  unsigned TimeoutMs;
+  std::shared_ptr<View> Notification;
+};
+
 class EndViewCmd : public Command {
 protected:
   void executeInternal(Context &Ctx) const override;

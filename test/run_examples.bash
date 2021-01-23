@@ -48,6 +48,10 @@ echo "# Simple Composite"
 "$EXAMPLES_DIR/gui/simple_composite.py" $IP $PORT
 sleep 2
 
+echo "# Notification"
+"$EXAMPLES_DIR/gui/notification.py" $IP $PORT
+sleep 2
+
 echo "# CryptoTracker"
 "$EXAMPLES_DIR/gui/cryptotracker/cryptotracker.py" $IP $PORT euro bitcoin -p 0.5 --once
 sleep 2
