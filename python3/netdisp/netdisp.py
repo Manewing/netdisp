@@ -37,12 +37,13 @@ class NetDisp(object):
         """
         if self._current_cmd is None:
             raise ValueError("No command to send")
+        data = self._current_cmd.finish()
+        self._current_cmd = None
         try:
-            return self._sender.send(self._current_cmd.finish()) > 0
+            return self._sender.send(data) > 0
         except OSError as e:
             print(f"Failed to send commend: {e}", file=sys.stderr)
             return False
-        self._current_cmd = None
         return True
 
     def abort_cmd(self):
