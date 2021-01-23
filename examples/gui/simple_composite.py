@@ -4,8 +4,8 @@ import os
 import argparse
 import sys
 
-DROPLET_ICON_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "imgs",
-                                 "droplet_icon.png")
+DROPLET_ICON_PATH = os.path.join(os.path.realpath(os.path.dirname(__file__)),
+                                 "..", "..", "imgs", "droplet_icon.png")
 
 try:
     from netdisp import NetDisp

@@ -14,7 +14,8 @@ except ImportError as e:
 
 API_URL = 'https://api.coinbase.com/v2/prices'
 
-IMGS_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "..", "imgs")
+IMGS_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)),
+                         "..", "..", "..", "imgs")
 
 
 def get_icon(kind: str) -> str:
@@ -56,6 +57,9 @@ def parse_args(args):
                         type=float,
                         default=10,
                         help="Update period in minutes")
+    parser.add_argument("--once",
+                        action="store_true",
+                        help="If to not run continously but only once")
     return parser.parse_args(args)
 
 
@@ -76,6 +80,9 @@ def main(args):
         netdisp.send()
 
         time.sleep(args.period * 60)
+
+        if args.once:
+            break
 
 
 if __name__ == "__main__":
