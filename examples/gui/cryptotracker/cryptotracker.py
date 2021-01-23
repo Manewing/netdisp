@@ -14,8 +14,8 @@ except ImportError as e:
 
 API_URL = 'https://api.coinbase.com/v2/prices'
 
-IMGS_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)),
-                         "..", "..", "..", "imgs")
+IMGS_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..",
+                         "..", "..", "imgs")
 
 
 def get_icon(kind: str) -> str:
@@ -70,7 +70,11 @@ def main(args):
     netdisp.show_view(args.view).send()
 
     while True:
-        price = get_latest_price(args.currency, args.crypto)
+        try:
+            price = get_latest_price(args.currency, args.crypto)
+        except Exception as e:
+            print(f"Could not fetch latest crypto price: {e}", file=sys.stderr)
+            price = 0
 
         netdisp.create_composite()
         netdisp.show_text(f"~#{int(price):d}\n#~*/*")
