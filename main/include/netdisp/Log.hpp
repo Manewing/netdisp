@@ -5,9 +5,9 @@
 
 #include <esp_log.h>
 
-#define ND_LOGI(TAG, MSG, ...) ESP_LOGI(TAG, MSG, __VA_ARGS__)
-#define ND_LOGW(TAG, MSG, ...) ESP_LOGW(TAG, MSG, __VA_ARGS__)
-#define ND_LOGE(TAG, MSG, ...) ESP_LOGE(TAG, MSG, __VA_ARGS__)
+#define ND_LOGI(TAG, MSG, ...) ESP_LOGI(TAG, MSG, ##__VA_ARGS__)
+#define ND_LOGW(TAG, MSG, ...) ESP_LOGW(TAG, MSG, ##__VA_ARGS__)
+#define ND_LOGE(TAG, MSG, ...) ESP_LOGE(TAG, MSG, ##__VA_ARGS__)
 
 #else
 
