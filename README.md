@@ -131,8 +131,8 @@ project from hackaday.io
 # Images
 
 <div style="text-align: center">
-<img src="imgs/doc/netdisp.png" width=600>
-<img src="imgs/doc/netdisp_startup.png" width=600>
-<img src="imgs/doc/system_load.png" width=600>
-<img src="imgs/doc/crypto_bitcoin.png" width=600>
+<img src="imgs/doc/netdisp.jpg" width=600>
+<img src="imgs/doc/netdisp_startup.jpg" width=600>
+<img src="imgs/doc/system_load.jpg" width=600>
+<img src="imgs/doc/crypto_bitcoin.jpg" width=600>
 </div>
