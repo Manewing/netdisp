@@ -74,6 +74,7 @@ def main(args):
             price = get_latest_price(args.currency, args.crypto)
         except Exception as e:
             print(f"Could not fetch latest crypto price: {e}", file=sys.stderr)
+            sys.stderr.flush()
             price = 0
 
         netdisp.create_composite()
