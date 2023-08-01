@@ -1,3 +1,4 @@
+
 idf_component_register(
   SRCS
     "src/ByteStream.cpp"
@@ -13,9 +14,11 @@ idf_component_register(
     "src/Notification.cpp"
     "src/Parser.cpp"
     "src/RotEnc.cpp"
+    "src/System.cpp"
     "src/TextView.cpp"
     "src/ViewController.cpp"
     "src/netdisp.cpp"
   INCLUDE_DIRS
     "include"
+  REQUIRES driver lcdgfx esp_wifi esp_event esp_netif nvs_flash console network esp32-rotary-encoder
 )

@@ -5,4 +5,5 @@ idf_component_register(
     "src/UdpReceiver.cpp"
   INCLUDE_DIRS
     "include"
+  REQUIRES esp_wifi
 )

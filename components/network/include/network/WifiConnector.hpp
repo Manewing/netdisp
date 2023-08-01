@@ -1,6 +1,8 @@
 #ifndef NETWORK_WIFI_CONNECTOR_HPP
 #define NETWORK_WIFI_CONNECTOR_HPP
 
+#include <freertos/FreeRTOS.h>
+#include <freertos/event_groups.h>
 #include <stdint.h>
 #include <string>
 
@@ -40,7 +42,7 @@ protected:
 
 private:
   uint32_t Ipv4Addr = 0;
-  void *EventHandle = nullptr;
+  EventGroupHandle_t EventHandle = nullptr;
   void *InstanceGotAnyId = nullptr;
   void *InstanceGotIp = nullptr;
   unsigned ConnectNumRetry = 0;

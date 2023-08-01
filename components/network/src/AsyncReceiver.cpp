@@ -1,10 +1,7 @@
 #include <cstring>
+#include <esp_log.h>
 #include <memory>
 #include <network/AsyncReceiver.hpp>
-
-#include <esp_log.h>
-#include <freertos/FreeRTOS.h>
-#include <freertos/task.h>
 
 constexpr const char *TaskName = "async_recv";
 constexpr unsigned StackSizeInWords = 4048;

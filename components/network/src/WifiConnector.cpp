@@ -1,10 +1,8 @@
 #include <cstring>
 #include <network/WifiConnector.hpp>
-
 #include <esp_event.h>
 #include <esp_log.h>
 #include <esp_wifi.h>
-#include <freertos/event_groups.h>
 
 #define LOGGER_TAG "WifiConnector"
 
@@ -79,7 +77,7 @@ void WifiConnector::startWifi(std::string const &SSID,
   WifiConfig.sta.pmf_cfg.required = false;
 
   ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
-  ESP_ERROR_CHECK(esp_wifi_set_config(ESP_IF_WIFI_STA, &WifiConfig));
+  ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &WifiConfig));
   ESP_ERROR_CHECK(esp_wifi_start());
 
   ESP_LOGI(LOGGER_TAG, "started wifi");

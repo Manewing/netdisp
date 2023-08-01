@@ -1,5 +1,6 @@
 #include <cassert>
 #include <netdisp/CommandBuilder.hpp>
+#include <string>
 
 namespace netdisp {
 

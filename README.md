@@ -51,7 +51,7 @@ Install ESP-IDF:
 ```bash
 git clone --recursive https://github.com/espressif/esp-idf
 cd esp-idf
-git checkout v4.2
+git checkout v5.1
 git submodule update --init --recursive
 ```
 

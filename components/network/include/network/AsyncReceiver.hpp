@@ -1,6 +1,8 @@
 #ifndef NETWORK_ASYNC_RECEIVER_HPP
 #define NETWORK_ASYNC_RECEIVER_HPP
 
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
 #include <functional>
 #include <network/Receiver.hpp>
 #include <stdint.h>
@@ -33,7 +35,7 @@ private:
   Receiver &Recv;
   unsigned MaxMsgLen;
   Callback OnRecv;
-  void *TaskHandle = nullptr;
+  TaskHandle_t TaskHandle = nullptr;
 };
 
 } // namespace network

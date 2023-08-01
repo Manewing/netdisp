@@ -10,7 +10,7 @@ if ! [ -d "$ESP_IDF_DIR" ]; then
 fi
 
 pushd "$ESP_IDF_DIR"
-git checkout v4.2
+git checkout v5.1
 git submodule update --init --recursive
 git checkout .
 
