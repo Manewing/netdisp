@@ -5,6 +5,7 @@
 #include <netdisp/Led.hpp>
 #include <netdisp/Parser.hpp>
 #include <netdisp/RotEnc.hpp>
+#include <netdisp/System.hpp>
 #include <netdisp/TextView.hpp>
 #include <netdisp/ViewController.hpp>
 #include <network/UdpReceiver.hpp>
@@ -35,6 +36,8 @@ std::shared_ptr<View> getReadyView(std::string const &IpStr,
 }
 
 void main() {
+  setupErrorHandlers();
+
   LcdgfxDisplayController DispCtrl;
   netdisp::LedController LedCtrl({NETDISP_LED_0_PIN, NETDISP_LED_1_PIN});
   netdisp::RotEncController RotEnc(NETDISP_ROTENC_PIN_A, NETDISP_ROTENC_PIN_B);
