@@ -11,9 +11,7 @@ namespace netdisp {
 
 class Command {
 public:
-  virtual ~Command() = default;
-
-  Command *setNext(std::shared_ptr<Command> Next);
+  virtual ~Command();
 
   void execute(Context &Ctx) const;
 

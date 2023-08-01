@@ -4,6 +4,7 @@
 #include <netdisp/ByteStream.hpp>
 #include <netdisp/Command.hpp>
 #include <netdisp/CommandBuilder.hpp>
+#include <vector>
 
 namespace netdisp {
 class Parser : protected ByteStream {
@@ -13,7 +14,7 @@ public:
 public:
   Parser(const uint8_t *Data, std::size_t Length, const CommandBuilder &CB);
 
-  std::shared_ptr<Command> parse();
+  std::vector<std::shared_ptr<Command>> parse();
 
 private:
   std::shared_ptr<Command> parseNextCommand();

@@ -11,10 +11,10 @@ Parser::Parser(const uint8_t *Data, std::size_t Length,
                const CommandBuilder &CB)
     : ByteStream(Data, Length), CB(CB) {}
 
-std::shared_ptr<Command> Parser::parse() {
+std::vector<std::shared_ptr<Command>> Parser::parse() {
   uint16_t MagicVal = 0;
   if (!get(MagicVal)) {
-    return nullptr;
+    return {};
   }
 
   // If we have no magic, treat data as text
@@ -25,27 +25,28 @@ std::shared_ptr<Command> Parser::parse() {
     get(Text, getLength());
     std::replace_if(Text.begin(), Text.end(),
                     [](char C) { return !std::isprint(C) && C != '\n'; }, ' ');
-    return CB.createShowTextCmd(std::move(Text), false, false);
+    return {CB.createShowTextCmd(std::move(Text), false, false)};
   }
 
+  std::vector<std::shared_ptr<Command>> Commands;
   std::shared_ptr<Command> FirstCmd = parseNextCommand();
   if (!FirstCmd) {
     // TODO dump message content
-    return nullptr;
+    return {};
   }
-  Command *LastCmd = FirstCmd.get();
+  Commands.push_back(FirstCmd);
 
   while (!eof()) {
     std::shared_ptr<Command> NextCmd = parseNextCommand();
     if (!NextCmd) {
-      // TODO dump message content
-      return nullptr;
+      // Parsing of package failed, abort
+      return {};
     }
 
-    LastCmd = LastCmd->setNext(NextCmd);
+    Commands.push_back(NextCmd);
   }
 
-  return FirstCmd;
+  return Commands;
 }
 
 std::shared_ptr<Command> Parser::parseNextCommand() {

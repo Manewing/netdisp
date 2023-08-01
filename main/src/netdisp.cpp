@@ -88,9 +88,15 @@ void main() {
     ESP_LOGI("NetDisp", "Got message of length %u", Count);
 
     netdisp::Parser Parser(Buffer, Count, DefaultCommandBuilder());
-    if (auto Cmd = Parser.parse()) {
+    auto Cmds = Parser.parse();
+
+    if (!Cmds.empty()) {
       Ctx.lock();
-      Cmd->execute(Ctx);
+      for (auto const &Cmd : Cmds) {
+        Cmd->execute(Ctx);
+      }
+
+      Ctx.ParentViews = {};
       Ctx.unlock();
     } else {
       ESP_LOGW("NestDisp", "Failed to parse message command");
@@ -104,19 +110,25 @@ void main() {
   ViewCtrl.show(DispCtrl);
 
   int LastPosition = 0;
+  unsigned LogCounter = 0;
   while (1) {
+    Ctx.lock();
     ViewCtrl.show(DispCtrl);
 
     int Position = 0;
     if (RotEnc.waitForEvent(Position, /*TimeoutMs=*/2)) {
-      Ctx.lock();
       if (LastPosition < Position) {
         Ctx.ViewCtrl.showView(Ctx.ViewCtrl.getShownViewIdx() + 1);
       } else if (LastPosition > Position) {
         Ctx.ViewCtrl.showView(Ctx.ViewCtrl.getShownViewIdx() - 1);
       }
-      Ctx.unlock();
       LastPosition = Position;
+    }
+    Ctx.unlock();
+
+    if (++LogCounter == 100) {
+      logFreeHeapSize();
+      LogCounter = 0;
     }
 
     vTaskDelay(10 / portTICK_PERIOD_MS);
