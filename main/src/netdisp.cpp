@@ -30,6 +30,20 @@ std::shared_ptr<View> getLoadingView() {
                                       sizeof(netdisp_bitmap_data));
 }
 
+std::shared_ptr<View> getNoWifiView() {
+  // FIXME hardcoded display size
+  return std::make_shared<BitmapView>(32, 0, 64, 64,
+                                      netdisp_no_wifi_bitmap_data,
+                                      sizeof(netdisp_no_wifi_bitmap_data));
+}
+
+std::shared_ptr<View> getErrorView() {
+  // FIXME hardcoded display size
+  return std::make_shared<BitmapView>(32, 0, 64, 64,
+                                      netdisp_no_wifi_bitmap_data,
+                                      sizeof(netdisp_no_wifi_bitmap_data));
+}
+
 std::shared_ptr<View> getReadyView(std::string const &IpStr,
                                    std::string const &PortStr) {
   return std::make_shared<TextView>("~*Ready*\n\n~" + IpStr + "\n~" + PortStr);
@@ -52,6 +66,8 @@ void main() {
   auto &WifiConn = network::WifiConnector::getInstance();
   if (!WifiConn.connect(NETDISP_WIFI_SSID, NETDISP_WIFI_PASSWORD,
                         NETDISP_WIFI_MAX_RETRY)) {
+    ViewCtrl.setDefaultView(getNoWifiView());
+    ViewCtrl.show(DispCtrl);
     return;
   }
 
@@ -59,8 +75,11 @@ void main() {
   network::AsyncUdpReceiver AsyncRecv(NETDISP_PORT, NETDISP_MAX_MSG_LEN);
   if (!AsyncRecv.isReady()) {
     ESP_LOGE("NetDisp", "Could not setup async receiver");
+    ViewCtrl.setDefaultView(getErrorView());
+    ViewCtrl.show(DispCtrl);
     return;
   }
+
   AsyncRecv.onRecv([&Ctx](uint8_t *Buffer, int Count) {
     if (Count < 0) {
       ESP_LOGE("NetDisp", "Failed to receive data");
