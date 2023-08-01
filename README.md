@@ -136,3 +136,7 @@ project from hackaday.io
 <img src="imgs/doc/system_load.jpg" width=600>
 <img src="imgs/doc/crypto_bitcoin.jpg" width=600>
 </div>
+
+# TODO
+- Handle package sizes that would be exceeding max UDP size in netdisp receiver and sender
+- NetDisp does not reconnect if it loses the Wifi connection
